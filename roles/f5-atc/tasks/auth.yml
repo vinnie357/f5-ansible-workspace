@@ -1,0 +1,13 @@
+- name: get auth token
+  uri:
+    url: "https://{{ provider.server }}{{ authUrl }}"
+    method: POST
+    body_format: json
+    return_content: true
+    validate_certs: false
+    body: {"username":"{{ provider.user }}","password":"{{ provider.password }}","loginProviderName":"tmos"}
+    status_code: 200
+  register: token
+  retries: 3
+  delay: 30
+  delegate_to: localhost

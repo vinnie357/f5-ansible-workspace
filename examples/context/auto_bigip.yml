@@ -1,0 +1,15 @@
+context:
+    target: auto
+    tasks:
+        vmware: true
+        atc: true
+        do: true
+        as3: true
+        ts: false
+        apm: false
+        access: false
+        provision: true
+        vmotion: false
+        bigiq_as3: false
+    f5:
+        ova: vcenter-BIGIP-13.1.1.3-0.0.1.ALL-scsi.ova

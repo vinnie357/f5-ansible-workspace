@@ -1,0 +1,30 @@
+## apply profiles
+# modify { profile_access { profile_access_name "/Common/Mexico_VPN" profile_access_generation_action 0 profile_access_modified_since_last_policy_sync 1 } }
+# - name: Populate object
+#   set_fact:
+#     object: "{{ listitems|default({}) | combine( {item.item.name: item.stdout} ) }}"
+#   loop: "{{ list.results }}"
+
+- name: get profile name
+  set_fact:
+    profilename: "{{item.apm.policy}}"
+  loop: "{{provider.as3.apps}}"
+
+- name: POST Apply Profile
+  uri:
+    url: "https://{{ provider.server }}{{ restBashUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: |
+      {
+        "command": "run",
+        "utilCmdArgs": "-c 'tmsh modify apm profile access ""{{ profilename }}"" generation-action increment'"
+      }
+    #body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 202, 200
+  register: ApplyPolicyResult
+  delegate_to: localhost

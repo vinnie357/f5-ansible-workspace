@@ -1,0 +1,49 @@
+{
+    "class": "AS3",
+    "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.7.0",
+        "id": "coffee-declaration-01",
+        "label": "{{item.name}}",
+        "remark": "{{item.name}} - HTTP Application Service",
+        "target": {
+            "address": "{{ provider.server }}"
+        },
+        "{{item.tenant}}": {
+            "class": "Tenant",
+            "{{item.name}}": {
+                "class": "Application",
+                "template": "http",
+                "statsProfile": {
+                    "class": "Analytics_Profile",
+                    "collectClientSideStatistics": true,
+                    "collectOsAndBrowser": false,
+                    "collectMethod": false
+                },
+                "serviceMain": {
+                    "class": "Service_HTTP",
+                    "virtualAddresses": [
+                        "{{item.virtualaddress}}"
+                    ],
+                    "pool": "web_pool",
+                    "profileAnalytics": {
+                        "use": "statsProfile"
+                    }
+                },
+                "web_pool": {
+                    "class": "Pool",
+                    "monitors": [
+                        "http"
+                    ],
+                    "members": [
+                        {
+                            "servicePort": {{item.pool.port}},
+                            "serverAddresses": {{item.pool.servers}},
+                            "shareNodes": true
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+- name: Gather only registered virtual machines
+  vmware_vm_facts:
+    hostname: '{{ vcenter.host }}'
+    username: '{{ vcenter.user }}'
+    password: '{{ vcenter.password }}'
+    vm_type: vm
+    validate_certs: no
+  delegate_to: localhost
+  register: vm_facts
+
+- debug:
+    var: "{{item}}"
+  with_dict: "{{vm_facts.virtual_machines}}"

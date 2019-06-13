@@ -1,0 +1,1485 @@
+{
+	"info": {
+		"_postman_id": "08ddecf1-c2bb-4670-a303-e5184475fa4a",
+		"name": "F5 BIG-IP GTM Basic Tasks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Auth Token",
+			"item": [
+				{
+					"name": "Retrieve Authentication Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ff057961-201c-464d-ad36-78a41b992a82",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"bigip_a_auth_token\", jsonData.token.token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"{{bigip_a_username}}\",\n    \"password\":\"{{bigip_a_password}}\",\n    \"loginProviderName\":\"tmos\",\n    \"timeout\": 3600\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/shared/authn/login",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"authn",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Extend token lifetime",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2ad636dd-b192-4643-91dc-d927c7d20952",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							},
+							{
+								"key": "",
+								"value": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"timeout\": 7200\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/shared/authz/tokens/{{bigip_a_auth_token}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"authz",
+								"tokens",
+								"{{bigip_a_auth_token}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Authentication Works",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "25e51196-873d-4122-923d-0019c27929d0",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/shared/authz/tokens",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"authz",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GTM Server/Virtual Server Management",
+			"item": [
+				{
+					"name": "Get List of GTM Servers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List of GTM Virtaul Servers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/dca-bigip1/?expandSubcollections=true",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"dca-bigip1",
+								""
+							],
+							"query": [
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new GTM Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"name\": \"dbb-bigip2\",\n            \"partition\": \"Common\",\n            \"datacenter\": \"/Common/dcb\",\n            \"enabled\": true,\n            \"linkDiscovery\": \"disabled\",\n            \"monitor\": \"/Common/bigip \",\n            \"product\": \"single-bigip\",\n            \"virtualServerDiscovery\": \"disabled\",\n            \"addresses\": [\n                {\n                    \"name\": \"10.10.11.50\",\n                    \"translation\": \"none\"\n                }\n            ]\n        }"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new GTM Virtual Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "            {\n                \"name\": \"vipB\",\n                \"destination\": \"10.10.10.52:80\",\n                \"enabled\": true\n            }"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/~Common~dbb-bigip2/virtual-servers/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"~Common~dbb-bigip2",
+								"virtual-servers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all GTM server Options for Creation/Modification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "029e80eb-9762-4f3b-b03b-3c6f56f4d146",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/example",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"example"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable GTM Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"disabled\": true\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/~Common~dbb-bigip2/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"~Common~dbb-bigip2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enable GTM Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"enabled\": true\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/~Common~dbb-bigip2/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"~Common~dbb-bigip2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable GTM Virtual Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"disabled\": true\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/~Common~dbb-bigip2/virtual-servers/vipA",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"~Common~dbb-bigip2",
+								"virtual-servers",
+								"vipA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Re-Enable GTM Virtual Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"enabled\": true\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/~Common~dbb-bigip2/virtual-servers/vipA",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"~Common~dbb-bigip2",
+								"virtual-servers",
+								"vipA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete GTM Virtual Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/~Common~dbb-bigip2/virtual-servers/vipA",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"~Common~dbb-bigip2",
+								"virtual-servers",
+								"vipA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete GTM Server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/server/~Common~dbb-bigip2",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"server",
+								"~Common~dbb-bigip2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b6c5f73b-7c8e-4038-b63d-8a30c77132fa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "14dd36ca-8d53-46ea-b45c-df597825578f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "GTM Pool Management",
+			"item": [
+				{
+					"name": "Get List of GTM A record Pools",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/a/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"a",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List of GTM A Pool Members",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/a/~Common~test-pool/members",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"a",
+								"~Common~test-pool",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new GTM A record Pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"ExampleGTMPool2\",\n    \"Partition\":\"Common\",\n    \"loadBalancingMode\":\"topology\",\n    \"alternate-mode\":\"global-availability\",\n    \"fallback-mode\":\"return-to-dns\",\n    \"members\": [\n      { \"name\":\"/Common/dca-bigip1:vipA\"},\n      {\"name\":\"/Common/dbb-bigip1:vipB\"}\n      ]\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/a/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"a",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all GTM A Pool Options for Creation/Modification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "029e80eb-9762-4f3b-b03b-3c6f56f4d146",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/example",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"example"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify GTM A record Pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"ExampleGTMPool2\",\n    \"Partition\":\"Common\",\n    \"loadBalancingMode\":\"topology\",\n    \"alternate-mode\":\"global-availability\",\n    \"fallback-mode\":\"return-to-dns\",\n    \"members\": [\n      {\"name\":\"/Common/dca-bigip1:vipA\"},\n      {\"name\":\"/Common/dbb-bigip1:vipB\"},\n      {\"name\":\"/Common/dca-bigip1:vipB\"},\n      {\"name\":\"/Common/dbb-bigip1:vipA\"}\n      ]\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/a/~Common~ExampleGTMPool2",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"a",
+								"~Common~ExampleGTMPool2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable GTM Pool Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"disabled\": true\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/a/~Common~ExampleGTMPool2/members/~Common~dbb-bigip1:vipB",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"a",
+								"~Common~ExampleGTMPool2",
+								"members",
+								"~Common~dbb-bigip1:vipB"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Re-Enable Pool Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"enabled\": true\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/a/~Common~ExampleGTMPool2/members/~Common~dbb-bigip1:vipB",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"a",
+								"~Common~ExampleGTMPool2",
+								"members",
+								"~Common~dbb-bigip1:vipB"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete GTM A record Pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc14dfd5-b3b1-4ff0-96a5-c662464ec1c8",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/pool/a/~Common~ExampleGTMPool2",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"pool",
+								"a",
+								"~Common~ExampleGTMPool2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b6c5f73b-7c8e-4038-b63d-8a30c77132fa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "14dd36ca-8d53-46ea-b45c-df597825578f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "GTM WideIP Management",
+			"item": [
+				{
+					"name": "Get List of GTM A WideIPs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cae88b2e-68e9-48c2-b210-ab71cf940568",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/wideip/a",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"wideip",
+								"a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all options for Creation/Modification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cae88b2e-68e9-48c2-b210-ab71cf940568",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"baseRegKey\":\"\",\n    \"addOnKeys\":[],\n    \"automaticActivation\":false\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/wideip/a/example",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"wideip",
+								"a",
+								"example"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new GTM A WideIP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cae88b2e-68e9-48c2-b210-ab71cf940568",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"name\": \"testgtmwip.example.com\",\n            \"partition\": \"Common\",\n            \"poolLbMode\": \"topology\",\n            \"pools\": [\n                {\n                    \"name\": \"ExampleGTMPool1\",\n                    \"partition\": \"Common\",\n                    \"order\": 0,\n                    \"ratio\": 1\n                }\n            ]\n        }"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/wideip/a/",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"wideip",
+								"a",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify GTM A WideIP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cae88b2e-68e9-48c2-b210-ab71cf940568",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"name\": \"testgtmwip.example.com\",\n            \"partition\": \"Common\",\n            \"poolLbMode\": \"topology\",\n            \"pools\": [\n                {\n                    \"name\": \"ExampleGTMPool1\",\n                    \"partition\": \"Common\",\n                    \"order\": 0,\n                    \"ratio\": 1\n                }\n                {\n                    \"name\": \"ExampleGTMPool2\",\n                    \"partition\": \"Common\",\n                    \"order\": 0,\n                    \"ratio\": 1\n                }\n            ]\n        }"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/gtm/wideip/a/~Common~testgtmwip.example.com",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"gtm",
+								"wideip",
+								"a",
+								"~Common~testgtmwip.example.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Virtual",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cae88b2e-68e9-48c2-b210-ab71cf940568",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/ltm/virtual/~Common~vs_10.1.30.100-tcp-80",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"virtual",
+								"~Common~vs_10.1.30.100-tcp-80"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Administrative Tasks",
+			"item": [
+				{
+					"name": "Save Configuration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n     \"command\":\"save\"\n }"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/sys/config",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"config"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get HA Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d4694ad0-6e0f-46cb-ac52-9b2d3fc3979d",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"bigip_transaction_id\", jsonData.transId);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_a_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \n}"
+						},
+						"url": {
+							"raw": "https://{{bigip_a_mgmt}}/mgmt/tm/cm/device/?$select=failoverState",
+							"protocol": "https",
+							"host": [
+								"{{bigip_a_mgmt}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"cm",
+								"device",
+								""
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "failoverState"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8e66dd78-3b5a-480d-950f-c1e6b299ac5f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "1fc1d434-4835-4a22-8b40-df128671aa78",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

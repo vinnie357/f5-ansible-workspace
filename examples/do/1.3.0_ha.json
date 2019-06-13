@@ -1,0 +1,154 @@
+{
+    "$schema":"https://raw.githubusercontent.com/F5Networks/f5-declarative-onboarding/master/schema/base.schema.json",
+    "schemaVersion": "1.3.0",
+    "class": "Device",
+    "async": true,
+    "label": "BIG-IP VE cluster vmware",
+    "Common": {
+        "class": "Tenant",
+        "hostname": "bigip.example.com",
+        "myLicense": {
+            "class": "License",
+            "hypervisor": "vmware",
+            "licenseType": "licensePool",
+            "bigIqHost": "1.2.3.4",
+            "bigIqPassword": "admin",
+            "bigIqUsername": "admin",
+            "licensePool": "best_ve_pool",
+            "reachable": true,
+            "bigIpUsername": "admin",
+            "bigIpPassword": "password"
+        },
+        "myDns": {
+            "class": "DNS",
+            "nameServers": [
+                "1.1.1.1",
+                "8.8.8.8"
+            ],
+            "search": [
+                "domain.local"
+            ]
+        },
+        "myNtp": {
+            "class": "NTP",
+            "servers": [
+                "0.pool.ntp.org",
+                "1.pool.ntp.org"
+            ],
+            "timezone": "EST"
+        },
+        "myProvisioning":{
+            "class": "Provision",
+            "apm": "nominal"
+        },
+        "external": {
+            "class": "VLAN",
+            "tag": 100,
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "1.1",
+                    "tagged": false
+                }
+            ]
+        },
+        "internal": {
+            "class": "VLAN",
+            "tag": 200,
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "1.2",
+                    "tagged": false
+                }
+            ]
+        },
+        "ha": {
+            "class": "VLAN",
+            "tag": 300,
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "1.3",
+                    "tagged": false
+                }
+            ]
+        },
+        "external-self":{
+            "class": "SelfIp",
+            "address": "1.2.3.1/24",
+            "vlan": "external",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "external-float":{
+            "class": "SelfIp",
+            "address": "1.2.3.3/24",
+            "vlan": "external",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-1"
+        },
+        "internal-self": {
+            "class": "SelfIp",
+            "address": "10.10.1.1/24",
+            "vlan": "internal",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "internal-float": {
+            "class": "SelfIp",
+            "address": "10.10.1.3/24",
+            "vlan": "internal",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-1"
+        },
+        "ha-self": {
+            "class": "SelfIp",
+            "address": "192.168.100.1/24",
+            "vlan": "ha",
+            "allowService": "default",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "default_gw":{
+            "class": "Route",
+            "gw": "1.2.3.254/24",
+            "network": "default",
+            "mtu": 1500
+        },
+        "dbvars": {
+            "class": "DbVariables",
+            "ui.advisory.enabled": true,
+            "ui.advisory.color": "green",
+            "ui.advisory.text": "/Common/hostname"
+        },
+        "configsync": {
+            "class": "ConfigSync",
+            "configsyncIp": "/Common/ha-self/address"
+        },
+        "failoverAddress": {
+            "class": "FailoverUnicast",
+            "address": "/Common/ha-self/address"
+        },
+        "failoverGroup": {
+            "class": "DeviceGroup",
+            "type": "sync-failover",
+            "members": [
+                "bigip1.example.com","bigip2.example.com"
+            ],
+            "owner": "/Common/failoverGroup/members/0",
+            "autoSync": true,
+            "saveOnAutoSync": true,
+            "networkFailover": true,
+            "fullLoadOnSync": false,
+            "asmSync": false
+        },
+        "trust": {
+            "class": "DeviceTrust",
+            "localUsername": "admin",
+            "localPassword": "password",
+            "remoteHost": "/Common/failoverGroup/members/0",
+            "remoteUsername": "admin",
+            "remotePassword": "password"
+        }
+    }
+}

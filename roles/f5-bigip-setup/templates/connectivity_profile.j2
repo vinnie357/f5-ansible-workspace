@@ -1,0 +1,46 @@
+{
+    "kind": "tm:apm:profile:connectivity:connectivitystate",
+    "name": "{{item.name}}_cp",
+    "partition": "{{item.name}}",
+    "fullPath": "/{{item.name}}/{{item.name}}_cp",
+    "generation": 405062,
+    "selfLink": "https://localhost/mgmt/tm/apm/profile/connectivity/~{{item.name}}~{{item.name}}_cp?ver=14.1.0",
+    "adaptiveCompression": "enabled",
+    "citrixClientBundle": "/Common/default-citrix-client-bundle",
+    "citrixClientBundleReference": {
+        "link": "https://localhost/mgmt/tm/apm/resource/remote-desktop/citrix-client-bundle/~{{item.name}}~default-citrix-client-bundle?ver=14.1.0"
+    },
+    "compressBufferSize": 4096,
+    "compressCpuSaver": "true",
+    "compressCpuSaverHigh": 90,
+    "compressCpuSaverLow": 75,
+    "compressGzipLevel": 6,
+    "compressGzipMemlevel": 8192,
+    "compressGzipWindowSize": 16384,
+    "compressIngress": "false",
+    "compressPreferredMethod": "zlib",
+    "compression": "enabled",
+    "compressionCodecs": [
+        "deflate",
+        "lzo",
+        "bzip2"
+    ],
+    "customizationGroup": "/{{item.name}}/{{item.name}}_cp_secure_access_client_customization_6",
+    "customizationGroupReference": {
+        "link": "https://localhost/mgmt/tm/apm/policy/customization-group/~{{item.name}}~{{item.name}}_cp_secure_access_client_customization_6?ver=14.1.0"
+    },
+    "defaultsFrom": "/Common/connectivity",
+    "defaultsFromReference": {
+        "link": "https://localhost/mgmt/tm/apm/profile/connectivity/~Common~connectivity?ver=14.1.0"
+    },
+    "deflateCompressionLevel": 1,
+    "locationSpecific": "false",
+    "tunnelName": "/{{item.name}}/{{item.name}}_cp",
+    "tunnelNameReference": {
+        "link": "https://localhost/mgmt/tm/net/tunnels/tunnel/~{{item.name}}~{{item.name}}_cp?ver=14.1.0"
+    },
+    "clientPolicyReference": {
+        "link": "https://localhost/mgmt/tm/apm/profile/connectivity/~{{item.name}}~{{item.name}}_cp/client-policy?ver=14.1.0",
+        "isSubcollection": true
+    }
+}

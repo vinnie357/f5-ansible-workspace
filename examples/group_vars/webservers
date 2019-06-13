@@ -1,0 +1,7 @@
+webapps:
+    - app1:
+        address:
+        servicePort:
+    - app2:
+        address:
+        servicePort:

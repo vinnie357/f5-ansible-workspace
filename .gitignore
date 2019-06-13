@@ -1,0 +1,11 @@
+ansible
+f5-appsvcs-extension
+f5-declarative-onboarding
+f5-telemetry-streaming
+rpms/*
+ova/*
+group_vars/*
+host_vars/*
+context/*
+hosts
+apps/*

@@ -1,0 +1,9 @@
+- name: upload rpms
+  shell: |
+    FN={{ item.path | basename }}
+    RPM={{ item.path }}
+    IP={{ provider.server }}
+    LEN=$(wc -c $RPM | cut -f 1 -d ' ')
+    curl -kv https://$IP/mgmt/shared/file-transfer/uploads/$FN -H "X-F5-Auth-Token: "{{ token.json.token.token }}"" -H 'Content-Type: application/octet-stream' -H "Content-Range: 0-$((LEN - 1))/$LEN" -H "Content-Length: $LEN" -H 'Connection: keep-alive' --data-binary @$RPM
+  loop: "{{ rpm_list.files|default([0]) }}"
+  delegate_to: localhost

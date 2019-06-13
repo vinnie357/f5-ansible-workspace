@@ -1,0 +1,19 @@
+#https://{{VCENTER}}/rest/vcenter/vm/{{VM}}/power/stop
+
+- name: Power off VMs
+  uri:
+    url: "https://{{ vcenter.host }}/rest/vcenter/vm/{{vmStatus.json.value[0].vm}}/power/stop"
+    method: POST
+    return_content: true
+    validate_certs: false
+    headers:
+      vmware-api-session-id: "{{ vcenterToken.json.value }}"
+    status_code: 200
+  register: powerResult
+  retries: 3
+  delay: 30
+  delegate_to: localhost
+  when: vmStatus.json.value != []
+# - name: power off result
+#   debug:
+#     msg: "{{powerResult}}"

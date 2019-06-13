@@ -1,0 +1,36 @@
+---
+# tasks file for f5-ve-vmware
+# https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-vmware-esxi-13-1-0/3.html
+# https://devcentral.f5.com/articles/ve-on-vmware-part-1-custom-properties-29787
+- name: connect to vsphere and deploy ova "{{ vcenter.bigipova }}"
+  vmware_deploy_ovf:
+    allow_duplicates: true
+    cluster: "{{ vcenter.cluster }}"
+    datacenter: "{{ vcenter.datacenter }}"
+    datastore: "{{ vcenter.datastore }}"
+    disk_provisioning: "thin"
+    fail_on_spec_warnings: true
+    ova: "{{ vcenter.bigipova }}"
+    hostname: "{{ vcenter.host }}"
+    name: "{{ provider.name }}"
+    networks: "{{ provider.vmnetworks }}"
+    password: "{{ vcenter.password }}"
+    port: "443"
+    power_on: true
+    properties:
+      net.mgmt.addr: "{{provider.vmIP}}"
+      net.mgmt.gw: "{{provider.mgmtGW}}"
+      user.root.pwd: "{{provider.sshPassword}}"
+      user.admin.pwd: "{{provider.password}}"
+    deployment_option: "{{provider.size}}"
+    username: "{{ vcenter.user }}"
+    validate_certs: false
+    # wait: true
+    wait_for_ip_address: true
+  register: ovaResult
+  delegate_to: localhost
+  when: vmStatus.json.value == []
+# - debug:
+#     msg: "{{ ovaResult }}"
+# - debug:
+#     msg: "{{ ovaResult.instance.ipv4 }}"

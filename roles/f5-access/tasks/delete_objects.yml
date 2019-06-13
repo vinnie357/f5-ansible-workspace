@@ -1,0 +1,44 @@
+- name: POST Delete transactions
+  uri:
+    url: "https://{{ provider.server }}{{ restBashUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: | 
+          {
+            "command": "run",
+            "utilCmdArgs": " -c ' tmsh delete cli transaction;
+          tmsh delete apm profile access myidp;
+          tmsh delete apm policy access-policy myidp;
+          tmsh delete apm policy customization-group myidp*\'"
+          }
+    status_code: 202, 200
+  register: policyResult
+  delegate_to: localhost
+
+- debug:
+    msg: "{{policyResult}}"
+
+- name: POST Delete policy
+  uri:
+    url: "https://{{ provider.server }}{{ restBashUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: | 
+          {
+            "command": "run",
+            "utilCmdArgs": " -c 'tmsh delete apm profile access myidp'"
+          }
+    status_code: 202, 200
+  register: policyResult
+  delegate_to: localhost
+
+- debug:
+    msg: "{{policyResult}}"

@@ -1,0 +1,15 @@
+  - name: list as3 files
+    debug:
+      msg: "{{item.name}}"
+    loop: "{{ as3List }}"
+  
+  - name: Create AS3 File
+    template:
+      src: "{{ item.template}}.j2"
+      dest: "{{filePath}}/{{ item.name }}_as3.json"  
+      mode: 'preserve'
+    delegate_to: localhost
+    loop: "{{ as3List }}"
+
+
+    

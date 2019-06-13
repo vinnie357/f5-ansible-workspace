@@ -1,0 +1,7 @@
+  - name: Create access profile File
+    template:
+      src: "access_profile.j2"
+      dest: "{{filePath}}/{{item.name}}_ap.json"  
+      mode: 'preserve'
+    delegate_to: localhost
+    loop: "{{ provider.apm.profiles }}"

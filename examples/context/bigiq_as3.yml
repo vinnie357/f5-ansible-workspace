@@ -1,0 +1,15 @@
+context:
+    target: iq-prod
+    tasks:
+        vmware: false
+        atc: false
+        do: false
+        as3: false
+        ts: false
+        apm: false
+        access: false
+        provision: true
+        vmotion: false
+        bigiq_as3: true
+    f5:
+        ova: vcenter-BIGIP-13.1.1.3-0.0.1.ALL-scsi.ova

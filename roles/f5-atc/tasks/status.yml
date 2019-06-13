@@ -1,0 +1,16 @@
+- name: Wait for BIG-IP to be available
+  bigip_wait:
+    timeout: 60
+    provider:
+      password: "{{ provider.password }}"
+      server: "{{ provider.server }}"
+      user: "{{ provider.user}}"
+      server_port: "{{provider.server_port}}"
+      validate_certs: "{{provider.validate_certs}}"
+  delegate_to: localhost
+  register: status
+  until: status is success
+  retries: 10
+  delay: 6
+# - debug:
+#     msg: "{{status}}"

@@ -1,0 +1,39 @@
+{
+
+create apm policy access-policy {{item.name}};\\n
+create apm policy customization-group {{item.name}}_logout type logout;\\n
+create apm policy customization-group {{item.name}}_errormap type errormap;\\n
+create apm policy customization-group {{item.name}}_eps type eps;\\n
+create apm policy customization-group {{item.name}}_frameworkinstallation type framework-installation;\\n
+create apm policy customization-group {{item.name}}_general_ui type general-ui;\\n
+create apm profile access {{item.name}} access-policy {{item.name}} accept-languages add { {{item.language}} } log-settings replace-all-with  { {{item.logProfile}} };\\n
+
+forms commands
+create apm policy access-policy {{item.name}};\\n
+create apm policy customization-group {{item.name}}_logout type logout;\\n
+create apm policy customization-group {{item.name}}_errormap type errormap;\\n
+create apm policy customization-group {{item.name}}_eps type eps;\\n
+create apm policy customization-group {{item.name}}_frameworkinstallation type framework-installation;\\n
+create apm policy customization-group {{item.name}}_general_ui type general-ui;\\n
+create apm profile access {{item.name}} access-policy {{item.name}} accept-languages add { {{item.language}} } log-settings replace-all-with  { {{item.logProfile}} };\\n
+
+ad aaa
+create apm policy access-policy {{item.name}};\\n
+create apm policy customization-group {{item.name}}_logout type logout;\\n
+create apm policy customization-group {{item.name}}_errormap type errormap;\\n
+create apm policy customization-group {{item.name}}_eps type eps;\\n
+create apm policy customization-group {{item.name}}_frameworkinstallation type framework-installation;\\n
+create apm policy customization-group {{item.name}}_general_ui type general-ui;\\n
+create apm profile access {{item.name}} access-policy {{item.name}} accept-languages add { {{item.language}} } log-settings replace-all-with  { {{item.logProfile}} };\\n
+
+ad query
+
+create apm policy access-policy {{item.name}};\\n
+create apm policy customization-group {{item.name}}_logout type logout;\\n
+create apm policy customization-group {{item.name}}_errormap type errormap;\\n
+create apm policy customization-group {{item.name}}_eps type eps;\\n
+create apm policy customization-group {{item.name}}_frameworkinstallation type framework-installation;\\n
+create apm policy customization-group {{item.name}}_general_ui type general-ui;\\n
+create apm profile access {{item.name}} access-policy {{item.name}} accept-languages add { {{item.language}} } log-settings replace-all-with  { {{item.logProfile}} };\\n
+
+}

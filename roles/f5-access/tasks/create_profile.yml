@@ -1,0 +1,21 @@
+- name: create access profile
+  shell: |
+    #usr/bin/bash
+    policyname="{{provider.apm.profile.name}}"
+    # myidp
+    language="{{provider.apm.profile.language}}"
+    # en
+    logProfile="{{provider.apm.profile.logProfile}}"
+    # default-log-setting 
+
+    echo  -e 'create cli transaction;
+    create apm policy access-policy ${policyname};
+    create apm policy customization-group ${policyname}_logout type logout;
+    create apm policy customization-group ${policyname}_errormap type errormap;
+    create apm policy customization-group ${policyname}_eps type eps;
+    create apm policy customization-group ${policyname}_frameworkinstallation type framework-installation;
+    create apm policy customization-group ${policyname}_general_ui type general-ui;
+    create apm profile access ${policyname} access-policy ${policyname} accept-languages add { ${language} } log-settings replace-all-with  { ${logProfile} };
+    submit cli transaction' | tmsh -q
+  delegate_to: "{{provider.server}}"
+  register: createProfile

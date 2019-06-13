@@ -1,0 +1,112 @@
+- name: find tunnel file
+  find:
+    paths: "{{ filePath }}"
+    patterns: "*_tunnel.json"
+  register: tunnel_list
+  delegate_to: localhost
+# James Samarin
+#for the record "{{ (varName | basename).split('.')[0] }}" would work too. 
+- name: list tunnel items
+  debug:
+    msg: "{{ (item.path | basename).split('_tunnel.json')[0] }}"
+    # msg: "{{ (item.path | basename | splitext | first).split('_tunnel') }}"
+  loop: "{{ tunnel_list.files }}"
+
+# - debug:
+#     msg: "{{ app_list }}"
+# /mgmt/tm/net/tunnels/tunnel/~Common~vpn_chrome_cp
+#/mgmt/tm/net/tunnels/tunnel/~Canada_VPN~Canada_VPN_cp
+- name: check for tunnel
+  uri:
+    url: "https://{{ provider.server }}{{ tunnelURL }}~{{ (item.path | basename).split('_tunnel.json')[0] }}~{{ (item.path | basename).split('_tunnel.json')[0] }}_cp"
+    method: GET
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    status_code: 200, 404
+  register: tunnel_check_result
+  loop: "{{ tunnel_list.files }}"
+  delegate_to: localhost
+
+- debug:
+    msg: "{{tunnel_check_result}}"
+
+- name: POST tunnel
+  uri:
+    url: "https://{{ provider.server }}{{ tunnelURL }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 200, 409
+  register: tunnelResult
+  loop: "{{ tunnel_list.files }}"
+  # when: item.status is 400
+  # loop: "{{tunnel_check_result.results}}"
+  delegate_to: localhost
+  
+
+- name: find cp file
+  find:
+    paths: "{{ filePath }}"
+    patterns: "*_cp.json"
+  register: cp_list
+  delegate_to: localhost
+
+# - debug:
+#     msg: "{{ app_list }}"
+
+- name: POST CP
+  uri:
+    url: "https://{{ provider.server }}{{ cpURL }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 200, 409
+  register: cpResult
+  loop: "{{ cp_list.files }}"
+  delegate_to: localhost
+# - debug:
+#     msg: "{{ as3Result }}"
+    #when: doStatus.json is search("/declaration/") 
+
+- name: find cp settings file
+  find:
+    paths: "{{ filePath }}"
+    patterns: "*_cps.json"
+  register: cps_list
+  delegate_to: localhost
+  #when: cpResult.status is 200
+
+# path": "/home/ubuntu/se-tmos-install/host_vars/bigip04/France_VPN_as3.json",
+# France_VPN_cps.json
+# France_VPN
+# {{item.path | basename | splitext | first }}
+#mystring.split("del")[0]
+# split("del")[0]
+#{{item.path | basename | split('_cps.json') | first }}
+#~France_VPN~France_VPN_cp/client-policy/France_VPN_cp
+#/mgmt/tm/apm/profile/connectivity/~Japan_VPN~Japan_VPN_cp/client-policy/Japan_VPN_cp
+- name: PUT CP settings
+  uri:
+    url: "https://{{ provider.server }}{{ cpURL }}~{{ (item.path | basename).split('_cps.json')[0] }}~{{ (item.path | basename).split('_cps.json')[0] }}_cp/client-policy/{{ (item.path | basename).split('_cps.json')[0] }}_cp"
+    method: PUT
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 200
+  register: cpsResult
+  loop: "{{ cps_list.files }}"
+  delegate_to: localhost
+#  when: cpResult.status is 200

@@ -1,0 +1,11 @@
+
+- name: Perform storage vMotion of of virtual machine
+  vmware_vmotion:
+    hostname: "{{ vcenter.ip }}"
+    username: '{{ vcenter.user }}'
+    password: '{{ vcenter.password }}'
+    validate_certs: no
+    vm_name: '{{item}}'
+    destination_datastore: '{{context.dest_datastore}}'
+  loop: "{{ context.vms|default([0]) }}"
+  delegate_to: localhost

@@ -1,0 +1,5 @@
+---
+# vars file for f5-ve-vmware
+
+vcenterAuthUrl: "/rest/com/vmware/cis/session"
+vmUrl: "/rest/vcenter/vm/"

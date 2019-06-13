@@ -1,0 +1,24 @@
+{
+  "kind": "tm:net:tunnels:tunnel:tunnelstate",
+  "name": "{{item.name}}_cp",
+  "partition": "{{item.name}}",
+  "fullPath": "/Common/{{item.name}}_cp",
+  "generation": 1,
+  "selfLink": "https://localhost/mgmt/tm/net/tunnels/tunnel/~{{item.name}}~{{item.name}}_cp?ver=14.1.0",
+  "autoLasthop": "default",
+  "idleTimeout": 300,
+  "ifIndex": 448,
+  "key": 0,
+  "localAddress": "any6",
+  "mode": "bidirectional",
+  "mtu": 0,
+  "profile": "/Common/ppp",
+  "profileReference": {
+    "link": "https://localhost/mgmt/tm/net/tunnels/ppp/~Common~ppp?ver=14.1.0"
+  },
+  "remoteAddress": "any6",
+  "secondaryAddress": "any6",
+  "tos": "preserve",
+  "transparent": "disabled",
+  "usePmtu": "enabled"
+}

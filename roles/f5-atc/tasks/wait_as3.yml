@@ -1,0 +1,15 @@
+- name: wait for AS3
+  uri: 
+    url: "https://{{ provider.server }}{{ as3CheckUrl }}"
+    method: GET
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    status_code: 200
+  register: as3_wait
+  until: as3_wait is success
+  retries: 6
+  delay: 60
+  delegate_to: localhost
+  when: token.json.token.token != ""

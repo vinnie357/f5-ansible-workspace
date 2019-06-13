@@ -1,0 +1,5 @@
+- name: Install ATC loop
+  include_tasks: install_wsl_loop.yml
+  loop: "{{ rpm_list.files|default([0]) }}"
+  # loop_control:
+  #   pause: 30

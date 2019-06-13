@@ -1,0 +1,13 @@
+vcenter:
+  user: "svc-ansible@domain.com"
+  password: "******"
+  host: "192.168.x.x"
+  datacenter: "domain.com"
+  cluster: "BladeCenter"
+  bigipova: "{{ inventory_dir }}/ova/f5/{{ context.f5.ova | default('BIGIP-13.1.1.3-0.0.1.ALL-scsi.ova', true)}}"
+  datastore: "datastore1_ssd"
+bigiq:
+  user: "admin"
+  password: "*******"
+  host: "192.168.x.x"
+  licensepool: "ve_best_50"

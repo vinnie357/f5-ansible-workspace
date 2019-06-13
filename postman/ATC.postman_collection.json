@@ -1,0 +1,622 @@
+{
+	"info": {
+		"_postman_id": "35c0c1a9-bf91-4a9b-8daa-22486a22fcaf",
+		"name": "ATC",
+		"description": "automation tool chain\ndo,as3,ts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "as3",
+			"item": [
+				{
+					"name": "as3_check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/shared/appsvcs/info",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"info"
+							]
+						},
+						"description": "delete app"
+					},
+					"response": []
+				},
+				{
+					"name": "as3_install_check",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks/{{TASKID}}",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks",
+								"{{TASKID}}"
+							]
+						},
+						"description": "delete app"
+					},
+					"response": []
+				},
+				{
+					"name": "Iapp tasks check",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks/",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks",
+								""
+							]
+						},
+						"description": "delete app"
+					},
+					"response": []
+				},
+				{
+					"name": "as3_delete_app",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{HOST01}}/mgmt/shared/appsvcs/declare/US_VPN",
+							"protocol": "https",
+							"host": [
+								"{{HOST01}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare",
+								"US_VPN"
+							]
+						},
+						"description": "delete app"
+					},
+					"response": []
+				},
+				{
+					"name": "as3_uninstall",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a3d29c93-0961-491d-89fc-06ad25f2cf18",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//postman.clearGlobalVariable(\"token\");",
+									"",
+									"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+									"",
+									"postman.setEnvironmentVariable(\"TASKID\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"operation\":\"UNINSTALL\",\"packageName\":\"{{AS3VERSION}}\"}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks"
+							]
+						},
+						"description": "remove as3 package"
+					},
+					"response": []
+				},
+				{
+					"name": "as3_install",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a3d29c93-0961-491d-89fc-06ad25f2cf18",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//postman.clearGlobalVariable(\"token\");",
+									"",
+									"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+									"",
+									"postman.setEnvironmentVariable(\"TASKID\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"operation\":\"INSTALL\",\"packageFilePath\":\"/var/config/rest/downloads/{{AS3_RPM}}\" }"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks"
+							]
+						},
+						"description": "remove as3 package"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "do",
+			"item": [
+				{
+					"name": "do_check 01",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{HOST01}}/mgmt/shared/declarative-onboarding",
+							"protocol": "https",
+							"host": [
+								"{{HOST01}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"declarative-onboarding"
+							]
+						},
+						"description": "delete app"
+					},
+					"response": []
+				},
+				{
+					"name": "do_check 02",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{HOST02}}/mgmt/shared/declarative-onboarding",
+							"protocol": "https",
+							"host": [
+								"{{HOST02}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"declarative-onboarding"
+							]
+						},
+						"description": "delete app"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ts",
+			"item": [
+				{
+					"name": "ts_check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://192.168.20.16/mgmt/shared/telemetry/declare",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"20",
+								"16"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"telemetry",
+								"declare"
+							]
+						},
+						"description": "delete app"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "check_last_rest_task",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST01}}/mgmt/shared/iapp/package-management-tasks/{{TASKID}}",
+					"protocol": "https",
+					"host": [
+						"{{HOST01}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"iapp",
+						"package-management-tasks",
+						"{{TASKID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_rest_task_list",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST01}}/mgmt/shared/iapp/package-management-tasks/",
+					"protocol": "https",
+					"host": [
+						"{{HOST01}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"iapp",
+						"package-management-tasks",
+						""
+					]
+				},
+				"description": "delete app"
+			},
+			"response": []
+		},
+		{
+			"name": "get token 01",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8418d9e4-a267-460b-828d-4c6694a1bd8b",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"//postman.clearGlobalVariable(\"token\");",
+							"",
+							"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+							"",
+							"postman.setEnvironmentVariable(\"TOKEN\", jsonData.token.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "default",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "root",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"root\",\n    \"password\":\"default1\",\n    \"loginProviderName\":\"tmos\"\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST01}}/mgmt/shared/authn/login",
+					"protocol": "https",
+					"host": [
+						"{{HOST01}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"authn",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get token 02",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8418d9e4-a267-460b-828d-4c6694a1bd8b",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"//postman.clearGlobalVariable(\"token\");",
+							"",
+							"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+							"",
+							"postman.setEnvironmentVariable(\"TOKEN\", jsonData.token.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "default",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "root",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"root\",\n    \"password\":\"default1\",\n    \"loginProviderName\":\"tmos\"\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST02}}/mgmt/shared/authn/login",
+					"protocol": "https",
+					"host": [
+						"{{HOST02}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"authn",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8576d0bd-c35d-4632-8b64-ec41d3e3975f",
+						"exec": [
+							"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+							"",
+							"var check_vals = [",
+							"        { ",
+							"            \"path\":\"status\",",
+							"            \"value\":\"FINISHED\"",
+							"        }       ",
+							"    ];",
+							"",
+							"f5_check_response(check_vals);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"iapp",
+						"package-management-tasks",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

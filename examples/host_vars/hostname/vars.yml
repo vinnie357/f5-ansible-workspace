@@ -1,0 +1,94 @@
+provider:
+  server: 192.168.20.20
+  vmIP: '192.168.20.20/24'
+  mgmtGW: 192.168.20.254
+  user: admin
+  password: "{{ vault_password }}"
+  sshUser: root
+  sshPassword: "{{ ssh_vault_password }}"
+  validate_certs: no
+  server_port: 443
+  name: "hostname.domain.com"
+  vmnetworks: "{u'Internal':u'192.168.3.0', u'External':u'192.168.1.0', u'HA':u'192.168.40.0/24_f5_ha_vlan40', u'Management':u'192.168.20.0/24_mgmt_vlan20'}" 
+  # singplecpu,dualcpu,quadcpu,octalcpu
+  size: "quadcpu"
+  as3:
+    apps:
+      - template: "vpn"
+        name: "CUSTOMER_VPN"
+        virtualaddress: "192.168.1.125"
+        cert: "{{ vault_cert_vpn }}"
+        key: "{{ vault_key_vpn }}"
+        ciphers: "@STRENGTH:!EXPORT:ECDHE+AES-GCM:ECDHE+AES:DTLSv1:!TLSv1:!TLSv1_1"
+        apm:
+          policy: "/Common/Customer_VPN"
+          server_list:
+            - alias: "Customer_VPN"
+              host: "vpn.domain.com"
+            - alias: "Customer city"
+              host: "site.vpn.domain.com"
+        http:
+          options:
+            hstsIncludeSubdomains: "true"
+            hstsInsert: "true"
+            hstsPeriod: 16070400
+            serverHeaderValue: "\"\""
+        snatpool:
+          addresses: "192.168.2.1"
+            # - "192.168.2.1"
+  do:
+    devices:
+      - template: "bigip"
+        hostname: "hostname.domain.com"
+        dsc:
+          primary: 
+            host: "hostname.domain.com"
+            ip: "192.168.20.20"
+          secondary: 
+            host: "hostname2.domain.com"
+            ip: "192.168.20.21"
+        licenseKey:
+        network:
+          vlans:
+            internal:
+              tag: 10
+              interface: "1.2"
+              selfipnf: "192.168.3.1/24"
+              selfipf: "192.168.3.3/24"
+              tagging: false
+            external:
+              tag: 20
+              interface: "1.1"
+              selfipnf: "192.168.1.1/24"
+              selfipf: "192.168.1.3/24"
+              tagging: false
+            ha:
+              tag: 30
+              interface: "1.3"
+              selfipnf: "192.168.4.1/24"
+              tagging: false
+          routes:
+            default:
+              gateway: "192.168.1.1"
+        dns:
+          servers: "[\"192.168.2.251\",\"8.8.8.8\"]"
+          search: "[\"domain.com\"]"
+        ntp:
+          servers: "[\"0.pool.ntp.org\",\"1.pool.ntp.org\"]"
+          timezone: "EST"
+        # none,minimal,nominal,dedicated
+        provisioning:
+          avr: "nominal"
+          ltm: "nominal"
+          asm: "none"
+          apm: "nominal"
+          afm: "none"
+  apm:
+    profiles:
+      - name: "Customer_VPN"
+        language: "en"
+        logProfile: "default-log-setting"
+        policy:
+          login: "forms"
+          auth: "ad"
+          sso: "header"

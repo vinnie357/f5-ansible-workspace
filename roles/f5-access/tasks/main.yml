@@ -1,0 +1,10 @@
+---
+# tasks file for f5-access
+# - import_tasks: test.yml
+# - import_tasks: create_profile.yml
+- import_tasks: auth.yml
+- import_tasks: create_profile_json.yml
+- import_tasks: submit_profile.yml
+- import_tasks: apply_profile.yml
+# - import_tasks: create_profile_rest.yml
+# - import_tasks: delete_objects.yml

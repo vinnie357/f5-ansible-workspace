@@ -1,0 +1,9 @@
+---
+# tasks file for vmware-vmotion
+#https://docs.ansible.com/ansible/latest/modules/vmware_vmotion_module.html
+
+#- import_tasks: storage.yml
+
+#- import_tasks: datastore_facts.yml
+#- import_tasks: vm_facts.yml
+- import_tasks: storage.yml

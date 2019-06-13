@@ -1,0 +1,48 @@
+- name: install package "{{ item.path | basename }}"
+  uri:
+    url: "https://{{ provider.server }}{{installUrl}}"
+    method: POST
+    body_format: json
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body: "{\"operation\":\"INSTALL\",\"packageFilePath\":\"/var/config/rest/downloads/{{ item.path | basename }}\"}"
+    status_code: 202
+  register: installResult
+  delegate_to: localhost
+
+# - name: debug installResult
+#   debug: 
+#     msg: "{{installResult}}"
+
+- name: wait for install "{{ item.path | basename }}"
+  uri: 
+    url: "https://{{ provider.server }}{{ installUrl }}/{{installResult.json.id}}"
+    method: GET
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    status_code: 200
+  register: installStatus
+  delegate_to: localhost
+  until: installStatus.json.status == 'FINISHED' or installStatus.json.status == 'FAILED'
+  retries: 6
+  delay: 60
+
+- name: check for already installed "{{ item.path | basename }}"
+  uri: 
+    url: "https://{{ provider.server }}{{ installUrl }}/{{installResult.json.id}}"
+    method: GET
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    status_code: 200
+  register: installStatuscheck
+  delegate_to: localhost
+  until: installStatuscheck.json.errorMessage.find('already installed.')
+  retries: 20
+  delay: 30
+  when: installStatus.json.status == 'FAILED'

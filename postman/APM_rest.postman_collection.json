@@ -1,0 +1,1014 @@
+{
+	"info": {
+		"_postman_id": "4c87bdc6-eaef-4038-922e-4759521f85d1",
+		"name": "APM_rest",
+		"description": "apm policy automation calls",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "tmsh",
+			"item": [
+				{
+					"name": "POST Bash command example",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c \\\"date -u\\\"\",\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				},
+				{
+					"name": "POST create CLI transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c \\'tmsh create cli transaction;tmsh list apm policy access-policy api_demo_ap;tmsh list apm policy access-policy api_demo_ap;tmsh submit cli transaction\\'\"\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				},
+				{
+					"name": "POST create CLI transaction apm profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c \\' echo -e \\' create cli transaction;\\\\n\n create apm policy access-policy myidp;\\\\n\n create apm policy customization-group myidp_logout type logout;\\\\n\n create apm policy customization-group myidp_errormap type errormap;\\\\n\n create apm policy customization-group myidp_eps type eps;\\\\n\n create apm policy customization-group myidp_frameworkinstallation type framework-installation;\\\\n\n create apm policy customization-group myidp_general_ui type general-ui;\\\\n\n create apm profile access myidp access-policy myidp accept-languages add { en } log-settings replace-all-with  { default-log-setting };\\\\n\n submit cli transaction\\' | tmsh -q\\'\"\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Apm Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c 'tmsh modify apm profile access /Common/Mexico_VPN  generation-action increment'\"\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				},
+				{
+					"name": "POST delete transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c \\' echo -e \\' delete cli transaction\\' | tmsh -q\\'\"\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				},
+				{
+					"name": "POST delete orphaned APM objects",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \" -c \\' echo -e \\\" delete cli transaction; delete apm profile access myidp; delete apm policy access-policy myidp; delete apm policy customization-group myidp* \\\" | tmsh -q\\'\"\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				},
+				{
+					"name": "POST create CLI echo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c \\'echo \\'create cli transaction;create apm policy access-policy mysp-prp type per-rq-policy;create apm policy customization-group-set /Common/mysp-prp_cgs access-policy /Common/mysp-prp accept-languages replace-all-with { \\\"en\\\" } default-language \\\"en\\\";submit cli transaction\\' | tmsh\\'\"\n}\n\n\n"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				},
+				{
+					"name": "POST List apm Items",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c \\'tmsh list apm policy access-policy api_demo_ap;tmsh list apm policy access-policy api_demo_ap\\'\"\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				}
+			],
+			"description": "bash tmsh endpoints"
+		},
+		{
+			"name": "f5-access",
+			"item": [
+				{
+					"name": "Create RPM",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"appName\": \"f5-access\", \"packageVersion\": \"0.1.0\", \"packageRelease\": \"0001\"}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/shared/iapp/build-package",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"build-package"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "calls for access plugin"
+		},
+		{
+			"name": "GET connectivity profiles list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"profile",
+						"connectivity",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET access profiles list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/access-policy",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"policy",
+						"access-policy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET specific access profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/access-policy/~Japan_VPN~apm_test",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"policy",
+						"access-policy",
+						"~Japan_VPN~apm_test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET specific access policy item",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/agent/ending-allow/~Japan_VPN~apm_test_end_allow_ag",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"policy",
+						"agent",
+						"ending-allow",
+						"~Japan_VPN~apm_test_end_allow_ag"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET tunnel list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/net/tunnels/tunnel/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"net",
+						"tunnels",
+						"tunnel",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET specific connectivity profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/~Common~vpn_chrome_cp?ver=14.1.0",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"profile",
+						"connectivity",
+						"~Common~vpn_chrome_cp"
+					],
+					"query": [
+						{
+							"key": "ver",
+							"value": "14.1.0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET specific tunnel",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/net/tunnels/tunnel/~Common~not_vpn_chrome_cp",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"net",
+						"tunnels",
+						"tunnel",
+						"~Common~not_vpn_chrome_cp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST new connectivity profile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"kind\": \"tm:apm:profile:connectivity:connectivitystate\",\r\n    \"name\": \"vpn_chrome_cp\",\r\n    \"partition\": \"not_common\",\r\n    \"fullPath\": \"/not_common/vpn_chrome_cp\",\r\n    \"generation\": 1,\r\n    \"selfLink\": \"https://localhost/mgmt/tm/apm/profile/connectivity/~not_common~vpn_chrome_cp?ver=14.1.0\",\r\n    \"adaptiveCompression\": \"enabled\",\r\n    \"citrixClientBundle\": \"/Common/default-citrix-client-bundle\",\r\n    \"citrixClientBundleReference\": {\r\n        \"link\": \"https://localhost/mgmt/tm/apm/resource/remote-desktop/citrix-client-bundle/~not_common~default-citrix-client-bundle?ver=14.1.0\"\r\n    },\r\n    \"compressBufferSize\": 4096,\r\n    \"compressCpuSaver\": \"true\",\r\n    \"compressCpuSaverHigh\": 90,\r\n    \"compressCpuSaverLow\": 75,\r\n    \"compressGzipLevel\": 6,\r\n    \"compressGzipMemlevel\": 8192,\r\n    \"compressGzipWindowSize\": 16384,\r\n    \"compressIngress\": \"false\",\r\n    \"compressPreferredMethod\": \"zlib\",\r\n    \"compression\": \"enabled\",\r\n    \"compressionCodecs\": [\r\n        \"deflate\",\r\n        \"lzo\",\r\n        \"bzip2\"\r\n    ],\r\n    \"customizationGroup\": \"/not_common/vpn_chrome_cp_secure_access_client_customization_6\",\r\n    \"customizationGroupReference\": {\r\n        \"link\": \"https://localhost/mgmt/tm/apm/policy/customization-group/~not_common~vpn_chrome_cp_secure_access_client_customization_6?ver=14.1.0\"\r\n    },\r\n    \"defaultsFrom\": \"/Common/connectivity\",\r\n    \"defaultsFromReference\": {\r\n        \"link\": \"https://localhost/mgmt/tm/apm/profile/connectivity/~not_common~connectivity?ver=14.1.0\"\r\n    },\r\n    \"deflateCompressionLevel\": 1,\r\n    \"locationSpecific\": \"false\",\r\n    \"tunnelName\": \"/Common/vpn_chrome_cp\",\r\n    \"tunnelNameReference\": {\r\n        \"link\": \"https://localhost/mgmt/tm/net/tunnels/tunnel/~not_common~vpn_chrome_cp?ver=14.1.0\"\r\n    },\r\n    \"clientPolicyReference\": {\r\n        \"link\": \"https://localhost/mgmt/tm/apm/profile/connectivity/~not_common~vpn_chrome_cp/client-policy?ver=14.1.0\",\r\n        \"isSubcollection\": true\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"profile",
+						"connectivity",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST new access profile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"kind\": \"tm:apm:policy:access-policy:access-policystate\",\r\n    \"name\": \"Japan_VPN\",\r\n    \"partition\": \"Japan_VPN\",\r\n    \"fullPath\": \"/Japan_VPN/Japan_VPN\",\r\n    \"generation\": 1,\r\n    \"selfLink\": \"https://localhost/mgmt/tm/apm/policy/access-policy/~Japan_VPN~Japan_VPN?ver=13.1.1.3\",\r\n    \"defaultEnding\": \"/Japan_VPN/Japan_VPN_end_deny\",\r\n    \"defaultEndingReference\": {\r\n        \"link\": \"https://localhost/mgmt/tm/apm/policy/policy-item/~Japan_VPN~Japan_VPN_end_deny?ver=13.1.1.3\"\r\n    },\r\n    \"maxMacroLoopCount\": 1,\r\n    \"startItem\": \"/Japan_VPN/Japan_VPN_ent\",\r\n    \"startItemReference\": {\r\n        \"link\": \"https://localhost/mgmt/tm/apm/policy/policy-item/~Japan_VPN~Japan_VPN_ent?ver=13.1.1.3\"\r\n    },\r\n    \"type\": \"access-policy\",\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Japan_VPN_end_allow\",\r\n            \"partition\": \"Japan_VPN\",\r\n            \"priority\": 0,\r\n            \"nameReference\": {\r\n                \"link\": \"https://localhost/mgmt/tm/apm/policy/policy-item/~Japan_VPN~Japan_VPN_end_allow?ver=13.1.1.3\"\r\n            }\r\n        },\r\n        {\r\n            \"name\": \"Japan_VPN_end_deny\",\r\n            \"partition\": \"Japan_VPN\",\r\n            \"priority\": 0,\r\n            \"nameReference\": {\r\n                \"link\": \"https://localhost/mgmt/tm/apm/policy/policy-item/~Japan_VPN~Japan_VPN_end_deny?ver=13.1.1.3\"\r\n            }\r\n        },\r\n        {\r\n            \"name\": \"Japan_VPN_ent\",\r\n            \"partition\": \"Japan_VPN\",\r\n            \"priority\": 0,\r\n            \"nameReference\": {\r\n                \"link\": \"https://localhost/mgmt/tm/apm/policy/policy-item/~Japan_VPN~Japan_VPN_ent?ver=13.1.1.3\"\r\n            }\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/access-policy/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"policy",
+						"access-policy",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST new access policy-item",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"kind\": \"tm:apm:policy:policy-item:policy-itemstate\",\r\n    \"name\": \"apm_test_end_allow\",\r\n    \"partition\": \"Japan_VPN\",\r\n    \"fullPath\": \"/Japan_VPN/apm_test_end_allow\",\r\n    \"generation\": 1,\r\n    \"selfLink\": \"https://localhost/mgmt/tm/apm/policy/policy-item/~Japan_VPN~apm_test_end_allow?ver=13.1.1.3\",\r\n    \"caption\": \"Allow\",\r\n    \"color\": 1,\r\n    \"itemType\": \"ending\",\r\n    \"loop\": \"false\",\r\n    \"agents\": [\r\n        {\r\n            \"name\": \"apm_test_end_allow_ag\",\r\n            \"partition\": \"Japan_VPN\",\r\n            \"type\": \"ending-allow\",\r\n            \"nameReference\": {\r\n                \"link\": \"https://localhost/mgmt/tm/apm/policy/agent/ending-allow/~Japan_VPN~apm_test_end_allow_ag?ver=13.1.1.3\"\r\n            }\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/policy-item/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"policy",
+						"policy-item",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST new access ending",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"kind\": \"tm:apm:policy:agent:ending-allow:ending-allowstate\",\r\n    \"name\": \"apm_test_end_allow_ag\",\r\n    \"partition\": \"Japan_VPN\",\r\n    \"fullPath\": \"/Japan_VPN/apm_test_end_allow_ag\",\r\n    \"generation\": 1,\r\n    \"selfLink\": \"https://localhost/mgmt/tm/apm/policy/agent/ending-allow/~Japan_VPN~apm_test_end_allow_ag?ver=13.1.1.3\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/agent/ending-allow/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"policy",
+						"agent",
+						"ending-allow",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST new tunnel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"kind\": \"tm:net:tunnels:tunnel:tunnelstate\",\n    \"name\": \"not_vpn_chrome_cp\",\n    \"partition\": \"Common\",\n    \"fullPath\": \"/Common/not_vpn_chrome_cp\",\n    \"generation\": 1,\n    \"selfLink\": \"https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~not_vpn_chrome_cp?ver=14.1.0\",\n    \"autoLasthop\": \"default\",\n    \"idleTimeout\": 300,\n    \"ifIndex\": 448,\n    \"key\": 0,\n    \"localAddress\": \"any6\",\n    \"mode\": \"bidirectional\",\n    \"mtu\": 0,\n    \"profile\": \"/Common/ppp\",\n    \"profileReference\": {\n        \"link\": \"https://localhost/mgmt/tm/net/tunnels/ppp/~Common~ppp?ver=14.1.0\"\n    },\n    \"remoteAddress\": \"any6\",\n    \"secondaryAddress\": \"any6\",\n    \"tos\": \"preserve\",\n    \"transparent\": \"disabled\",\n    \"usePmtu\": \"enabled\"\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/net/tunnels/tunnel/",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"net",
+						"tunnels",
+						"tunnel",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET  new specific connectivity profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/~not_common~vpn_chrome_cp/client-policy/vpn_chrome_cp",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"profile",
+						"connectivity",
+						"~not_common~vpn_chrome_cp",
+						"client-policy",
+						"vpn_chrome_cp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT new cp server settings",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"type": "text",
+						"value": "{{TOKEN}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"kind\": \"tm:apm:profile:connectivity:client-policy:client-policystate\",\r\n  \"name\": \"vpn_chrome_cp\",\r\n  \"fullPath\": \"vpn_chrome_cp\",\r\n  \"generation\": 405351,\r\n  \"selfLink\": \"https://localhost/mgmt/tm/apm/profile/connectivity/~not_common~vpn_chrome_cp/client-policy/vpn_chrome_cp?ver=14.1.0\",\r\n  \"androidEc\": {\r\n    \"deviceLockMethod\": \"numeric\",\r\n    \"enableMobilesafe\": \"false\",\r\n    \"enforceDeviceLock\": \"true\",\r\n    \"enforceLogonMode\": \"false\",\r\n    \"logonMode\": \"native\",\r\n    \"maxInactivityTime\": 5,\r\n    \"minPasscodeLength\": 4,\r\n    \"requireDeviceAuth\": \"false\",\r\n    \"savePassword\": \"false\",\r\n    \"savePasswordMethod\": \"disk\",\r\n    \"savePasswordTimeout\": 240\r\n  },\r\n  \"androidEp\": {\r\n    \"deviceLockMethod\": \"numeric\",\r\n    \"enableMobilesafe\": \"false\",\r\n    \"enforceDeviceLock\": \"true\",\r\n    \"enforceLogonMode\": \"false\",\r\n    \"logonMode\": \"native\",\r\n    \"maxInactivityTime\": 5,\r\n    \"minPasscodeLength\": 4,\r\n    \"savePassword\": \"false\",\r\n    \"savePasswordMethod\": \"disk\",\r\n    \"savePasswordTimeout\": 240\r\n  },\r\n  \"chromeosEc\": {\r\n    \"enforceLogonMode\": \"false\",\r\n    \"logonMode\": \"native\",\r\n    \"savePassword\": \"false\",\r\n    \"savePasswordMethod\": \"disk\",\r\n    \"savePasswordTimeout\": 240\r\n  },\r\n  \"ec\": {\r\n    \"componentUpdate\": \"yes\",\r\n    \"reuseWinlogonCreds\": \"false\",\r\n    \"reuseWinlogonSession\": \"false\",\r\n    \"runLogoffScript\": \"false\",\r\n    \"savePassword\": \"false\",\r\n    \"savePasswordMethod\": \"disk\",\r\n    \"savePasswordTimeout\": 240,\r\n    \"saveServersOnExit\": \"true\",\r\n    \"warnBeforeScriptLaunch\": \"true\"\r\n  },\r\n  \"iosEc\": {\r\n    \"enableMobilesafe\": \"false\",\r\n    \"enforceLogonMode\": \"false\",\r\n    \"logonMode\": \"native\",\r\n    \"requireDeviceAuth\": \"false\",\r\n    \"savePassword\": \"false\",\r\n    \"savePasswordMethod\": \"disk\",\r\n    \"savePasswordTimeout\": 240,\r\n    \"vodDisconnectTimeout\": 2\r\n  },\r\n  \"iosEp\": {\r\n    \"enableMobilesafe\": \"false\",\r\n    \"enforceLogonMode\": \"false\",\r\n    \"enforcePinLock\": \"true\",\r\n    \"logonMode\": \"native\",\r\n    \"maxGracePeriod\": 2,\r\n    \"savePassword\": \"false\",\r\n    \"savePasswordMethod\": \"disk\",\r\n    \"savePasswordTimeout\": 240\r\n  },\r\n  \"locationSpecific\": \"false\",\r\n  \"macosEc\": {\r\n    \"enforceLogonMode\": \"false\",\r\n    \"logonMode\": \"native\",\r\n    \"savePassword\": \"false\",\r\n    \"savePasswordMethod\": \"disk\",\r\n    \"savePasswordTimeout\": 240\r\n  },\r\n  \"servers\": [\r\n    {\r\n      \"alias\": \"dr_vpn\",\r\n      \"host\": \"https://usdrvpn.f5apmlab.net\"\r\n    },\r\n    {\r\n      \"alias\": \"dr_vpn full\",\r\n      \"host\": \"https://usdrvpn.f5apmlab.net/all\"\r\n    },\r\n    {\r\n      \"alias\": \"dr_vpn split no dtls\",\r\n      \"host\": \"https://usdrvpn.f5apmlab.net/ssl\"\r\n    },\r\n    {\r\n      \"alias\": \"dr_vpn full no dtls\",\r\n      \"host\": \"https://usdrvpn.f5apmlab.net/allssl\"\r\n    }\r\n  ]\r\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/~not_common~vpn_chrome_cp/client-policy/vpn_chrome_cp",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"tm",
+						"apm",
+						"profile",
+						"connectivity",
+						"~not_common~vpn_chrome_cp",
+						"client-policy",
+						"vpn_chrome_cp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8418d9e4-a267-460b-828d-4c6694a1bd8b",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"//postman.clearGlobalVariable(\"token\");",
+							"",
+							"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+							"",
+							"postman.setEnvironmentVariable(\"TOKEN\", jsonData.token.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "default",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "root",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"{{WEB_USER}}\",\n    \"password\":\"{{WEB_PASSWORD}}\",\n    \"loginProviderName\":\"tmos\"\n}"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/mgmt/shared/authn/login",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"authn",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create_Access_Profile",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "metal357",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "_timenow=Mon+Mar+4+15%3A46%3A12+EST+2019&_timenow_before=Mon+Mar+4+15%3A46%3A12+EST+2019&_form_holder_opener_=&handler=%2Ftmui%2Faccessctrl%2Fprofiles%2Fcreate&handler_before=%2Ftmui%2Faccessctrl%2Fprofiles%2Fcreate&showObjList=settings_table%2Cconfig_table%2Cauthdomains_table%2Ccustomization_properties_table%2Ceditable_list_row_logout_uri_include%2Clogout_uri_timeoutrow%2Cprofile_exchange_namerow%2Cuser_identity_methodrow%2Cprofile_oauth_namerow%2Cdefault_languagerow&showObjList_before=&hideObjList=captiveportal_table%2Csso_table%2Cntlm_auth_namerow&hideObjList_before=&enableObjList=&enableObjList_before=&disableObjList=user_identity_method&disableObjList_before=&_bufvalue=lXYzY4JRNgV%2FouUWRz2X2qzUTHw%3D&_bufvalue_before=lXYzY4JRNgV%2FouUWRz2X2qzUTHw%3D&_bufvalue_validation=NO_VALIDATION&com.f5.util.LinkedAdd.action_override=%2Ftmui%2Faccessctrl%2Fprofiles%2Fcreate&com.f5.util.LinkedAdd.action_override_before=%2Ftmui%2Faccessctrl%2Fprofiles%2Fcreate&linked_add_id=&linked_add_id_before=&linkedadd_params=&linkedadd_params_before=&NO_VALIDATION_FIELD=&NO_VALIDATION_FIELD_before=&profile_name_hidden=&profile_name_hidden_before=null&profile_access_form=true&profile_access_form_before=true&form_page=%2Ftmui%2Faccessctrl%2Fprofiles%2Fcreate.jsp&form_page_before=%2Ftmui%2Faccessctrl%2Fprofiles%2Fcreate.jsp&which_button=&which_button_before=&sso_version_sso_config_name=v1&sso_version_sso_config_name_before=v1&exit_page=%2Ftmui%2Faccessctrl%2Fprofiles%2Flist.jsp&exit_page_before=%2Ftmui%2Faccessctrl%2Fprofiles%2Flist.jsp&mode_radio=0&mode_radio_before=0&profile_name=Japan_VPN&profile_name_before=&profile_name_required=1&type_required=1&type=0&type_before=null&scope_required=1&scope=0&scope_before=0&inactivity_timeout_override_before=unchecked&inactivity_timeout_validation=com.f5.form.NonNegativeIntValidator&inactivity_timeout_parent=900&inactivity_timeout_parent_before=900&access_policy_timeout_override_before=unchecked&access_policy_timeout_validation=com.f5.form.NonNegativeIntValidator&access_policy_timeout_parent=300&access_policy_timeout_parent_before=300&max_session_timeout_override_before=unchecked&max_session_timeout_validation=com.f5.form.NonNegativeIntValidator&max_session_timeout_parent=604800&max_session_timeout_parent_before=604800&min_failure_delay_override_before=unchecked&min_failure_delay_validation=com.f5.form.NonNegativeIntValidator&min_failure_delay_parent=2&min_failure_delay_parent_before=2&max_failure_delay_override_before=unchecked&max_failure_delay_validation=com.f5.form.NonNegativeIntValidator&max_failure_delay_parent=5&max_failure_delay_parent_before=5&max_concurrent_users_override_before=unchecked&max_concurrent_users_validation=com.f5.form.U32Validator&max_concurrent_users_parent=0&max_concurrent_users_parent_before=0&max_concurrent_sessions_override_before=unchecked&max_concurrent_sessions_validation=com.f5.form.U32Validator&max_concurrent_sessions_parent=0&max_concurrent_sessions_parent_before=0&max_in_progress_sessions_override_before=unchecked&max_in_progress_sessions_validation=com.f5.form.U32Validator&max_in_progress_sessions_parent=128&max_in_progress_sessions_parent_before=128&restrict_to_single_client_ip_override_before=unchecked&restrict_to_single_client_ip_parent_before=unchecked&use_http_503_on_error_override_before=unchecked&use_http_503_on_error_parent_before=unchecked&input_1combo_logout_uri_include=&input_1combo_logout_uri_include_before=&input_1combo_logout_uri_include_validation=NO_VALIDATION&entry_addlogout_uri_include_before=Add&logout_uri_include_validation=NO_VALIDATION&logout_uri_include_before=null&edit_entry_before=Edit&delete_entry_before=Delete&logout_uri_timeout=5&logout_uri_timeout_before=5&logout_uri_timeout_validation=com.f5.form.PositiveIntValidator&profile_exchange_name=&profile_exchange_name_before=&user_identity_method=0&user_identity_method_before=null&linked_button_add_dont_validation_anything_before=%2B&profile_oauth_name=&profile_oauth_name_before=&domain_cookie=&domain_cookie_before=&domain_cookie_validation=NO_VALIDATION&secure_cookie=true&secure_cookie_before=checked&persistent_cookie_before=unchecked&httponly_cookie_before=unchecked&sso_config_name=&sso_config_name_before=&string_input_validation=NO_VALIDATION&string_input=aa&string_input_before=null&string_add_before=Add&accept_languages_required=1&accept_languages=en&accept_languages_before=null&accept_languages_button_before=+%3C%3C+&accept_languages_available_button_before=+%3E%3E+&accept_languages_available=ja&accept_languages_available=zh-cn&accept_languages_available=zh-tw&accept_languages_available=ko&accept_languages_available=es&accept_languages_available=fr&accept_languages_available=de&accept_languages_available_before=null&default_language=en&default_language_before=null&exit_button_before=Cancel&finished=Finished&finished_before=Finished"
+				},
+				"url": {
+					"raw": "https://{{HOST}}/tmui/Control/form?__handler=/tmui/accessctrl/profiles/create&__source=finished&__linked=false&__fromError=false",
+					"protocol": "https",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"tmui",
+						"Control",
+						"form"
+					],
+					"query": [
+						{
+							"key": "__handler",
+							"value": "/tmui/accessctrl/profiles/create"
+						},
+						{
+							"key": "__source",
+							"value": "finished"
+						},
+						{
+							"key": "__linked",
+							"value": "false"
+						},
+						{
+							"key": "__fromError",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ede917a2-2e7e-4a37-86c4-f18c9c7fecd0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "fe53dfe7-7306-4f5a-91cf-eaafcfb0a9c5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "250fa1f2-fe8d-4692-aedc-b4166bfa763f",
+			"key": "UDF_HOST",
+			"value": "78cf2e35-3123-4c1f-8825-6440e0d1295a.access.udf.f5.com",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}

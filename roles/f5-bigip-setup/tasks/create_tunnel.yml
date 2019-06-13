@@ -1,0 +1,7 @@
+  - name: Create tunnel File
+    template:
+      src: "tunnel.j2"
+      dest: "{{filePath}}/{{item.name}}_tunnel.json"
+      mode: 'preserve'
+    delegate_to: localhost
+    loop: "{{ as3List }}"

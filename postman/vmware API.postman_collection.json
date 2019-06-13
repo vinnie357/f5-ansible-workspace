@@ -1,0 +1,534 @@
+{
+	"info": {
+		"_postman_id": "231dd3fd-ba3c-4744-b3b2-dde49cfa2769",
+		"name": "vmware API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get_datastores",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"value": "{{SID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/datastore/",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"datastore",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get specific datastore",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/datastore/?filter.names.1=synology_ssd",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"datastore",
+						""
+					],
+					"query": [
+						{
+							"key": "filter.names.1",
+							"value": "synology_ssd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get vms",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get vApps",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/api/vApp/",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"api",
+						"vApp",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get specific vm by name filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8aefc5b-a9f6-4861-a6b4-1e2664027fb2",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"postman.setEnvironmentVariable(\"VM\", jsonData.value[0].vm);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm?filter.names.1=bee-box1",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm"
+					],
+					"query": [
+						{
+							"key": "filter.names.1",
+							"value": "bee-box1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get specific vm by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"{{VM}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get specific vm hardware by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}/hardware/disk",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"{{VM}}",
+						"hardware",
+						"disk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create vmdk",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"spec\": {\r\n        \"new_vmdk\": {\r\n            \"capacity\": 21457280000,\r\n            \"name\": \"disk2\"\r\n        }\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}/hardware/disk",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"{{VM}}",
+						"hardware",
+						"disk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "power off vm",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}/power/stop",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"{{VM}}",
+						"power",
+						"stop"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "power off vm Copy",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/vm-932/power/stop",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"vm-932",
+						"power",
+						"stop"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete vm",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"{{VM}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete vm Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/vm-932",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"vm-932"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete vmdk",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "vmware-api-session-id",
+						"type": "text",
+						"value": "{{SID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}/hardware/disk/2002",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"vcenter",
+						"vm",
+						"{{VM}}",
+						"hardware",
+						"disk",
+						"2002"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth to vcenter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "248225f1-9d18-4596-a4a6-fbb81da57955",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"//postman.clearGlobalVariable(\"token\");",
+							"",
+							"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+							"",
+							"postman.setEnvironmentVariable(\"SID\", jsonData.value);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "P@ssw0rd",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "svc-ansible@vinlab.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{VCENTER}}/rest/com/vmware/cis/session",
+					"protocol": "https",
+					"host": [
+						"{{VCENTER}}"
+					],
+					"path": [
+						"rest",
+						"com",
+						"vmware",
+						"cis",
+						"session"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

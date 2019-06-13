@@ -1,0 +1,897 @@
+{
+	"info": {
+		"_postman_id": "b65e884e-261c-47ba-9b1a-30e30a85c7a4",
+		"name": "AS3 GTM 3.9.0 Samples",
+		"description": "Sample Origin:\nhttps://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/declarations/all-properties.html",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1_Authenticate",
+			"item": [
+				{
+					"name": "Authenticate and Obtain Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c09def77-fd22-4567-88a1-5ac0cd59d09d",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var populate_vars = [",
+									"        {name:\"bigip1_admin_token\", value:\"token.token\"}",
+									"    ];",
+									"    ",
+									"f5_populate_env_vars(populate_vars);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"{{bigip_a_username}}\",\n  \"password\": \"{{bigip_a_password}}\",\n  \"loginProvidername\":\"tmos\"\n}\n"
+						},
+						"url": "https://{{host}}/mgmt/shared/authn/login",
+						"description": "Perform authentication and populate the variable specified in the {{bigip_token_var}} variable."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Authentication Works",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9a2ea594-ce8d-49ba-8fb9-83577090f260",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        {path:\"token\", value:environment.bigip1_admin_token}",
+									"    ];",
+									"    ",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "https://{{host}}/mgmt/shared/authz/tokens/{{bigip1_admin_token}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Set Authentication Token Timeout",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bb2fe4d9-7e7c-4f87-b336-45cb7a1be84f",
+								"exec": [
+									"if(typeof environment.bigip_token_timeout === 'undefined') {",
+									"    postman.setEnvironmentVariable('bigip_token_timeout', 1200);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "16574faf-8215-48a7-8c4d-e766f551c863",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        {path:\"timeout\", value:environment.bigip_token_timeout}",
+									"    ];",
+									"    ",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"timeout\":\"{{bigip_token_timeout}}\"\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/authz/tokens/{{bigip1_admin_token}}"
+					},
+					"response": []
+				}
+			],
+			"description": "Authenticate to a BIG-IP device.\n\nInput Variables:\nbigip_mgmt      BIG-IP management address\nbigip_username    Username\nbigip_password    Password\nbigip_token_timeout  [OPTIONAL] Timeout for the auth token\n\nOutput Variables:\nbigip_token      Authentication token"
+		},
+		{
+			"name": "Install AS3",
+			"item": [
+				{
+					"name": "Enable iAppLX Package Management",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "17d3ef06-ac13-4678-b237-c848a722026c",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\":\"run\", \n\t\"utilCmdArgs\": \"-c 'touch /var/config/rest/iapps/enable'\"\n}"
+						},
+						"url": "https://{{host}}/mgmt/tm/util/bash",
+						"description": "Not strictly necessary but useful to see the status of the package in the GUI."
+					},
+					"response": []
+				},
+				{
+					"name": "Download the AS3 Package to BIG-IP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d965dd9-2536-4702-8234-fc658d33c92d",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\":\"run\", \n\t\"utilCmdArgs\": \"-c 'curl -L -s -o /var/config/rest/downloads/{{as3rpmFileName}} https://github.com/F5Networks/f5-appsvcs-extension/blob/master/dist/latest/{{as3rpmFileName}}?raw=true'\"\n}"
+						},
+						"url": "https://{{host}}/mgmt/tm/util/bash"
+					},
+					"response": []
+				},
+				{
+					"name": "Install RPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8f2777f0-7120-4a63-ac3e-f0e5a0ef2812",
+								"exec": [
+									"var respData = JSON.parse(responseBody);",
+									"",
+									"tests[\"response has id: \" +respData.id] = respData.id;",
+									"",
+									"postman.setEnvironmentVariable('rpm_installation_status_id',respData.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\"operation\": \"INSTALL\",\r\"packageFilePath\": \"/var/config/rest/downloads/{{as3rpmFileName}}\"\r}"
+						},
+						"url": "https://{{host}}/mgmt/shared/iapp/package-management-tasks",
+						"description": "Request installs the RPM on the BIG-IP. This will not be necessary once AS3 container support is added in subsequent versions.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Check RPM install process status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f48b1692-dc59-4935-b4ad-d1adfa0cbf65",
+								"exec": [
+									"tests[\"Status code is: \" + responseCode.code] = responseCode.code === 200;",
+									"",
+									"var    retryCounter = environment.retryCounter;",
+									"var    retryInterval = environment.retryInterval;",
+									"var    retryLimit = environment.retryLimit;",
+									"",
+									"var respData = JSON.parse(responseBody);",
+									"",
+									"function pausecomp(millis)",
+									"{",
+									"    var date = new Date();",
+									"    var curDate = null;",
+									"    do { curDate = new Date(); }",
+									"    while(curDate-date < millis);",
+									"}",
+									"",
+									"if ( respData.status != \"FINISHED\") {",
+									"    tests[\"retry-counter value is: \" + retryCounter] = retryCounter;",
+									"    if ( parseInt(retryCounter) < parseInt(retryLimit))",
+									"    {",
+									"        tests[\"retry-counter value is: \" + retryCounter] = retryCounter;",
+									"        postman.setEnvironmentVariable(\"retryCounter\", parseInt(retryCounter) + 1);",
+									"        pausecomp(retryInterval);",
+									"        postman.setNextRequest(\"Check RPM install process status\");",
+									"    } else",
+									"    {",
+									"        postman.setEnvironmentVariable(\"retryCounter\", 0);",
+									"        console.log(\"Resetting, retry counter to 0\");",
+									"        tests[\"Retries Expired\"] = true === false;",
+									"}",
+									"} else {",
+									"    tests[\"Process Status is: \" + respData.status] = respData.status == \"FINISHED\"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "https://{{host}}/mgmt/shared/iapp/package-management-tasks/{{rpm_installation_status_id}}",
+						"description": "See if the RPM install procedure finished successfully."
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 selfTest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "54ad9344-9b6d-427e-844b-51a73b5ae960",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var respData = JSON.parse(responseBody);",
+									"",
+									"tests[\"AS3 selfTest Passed\"] = respData[0].message =  \"all tests passed\";",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/selftest",
+						"description": "Run the built-in AS3 selfTest.\n\nNote the following from the Docs:\n\"If an error displays, this is an indication that AS3 is not entirely compatible with your BIG-IP software version or module provisioning. This does not necessarily imply that you cannot use AS3 successfully.\""
+					},
+					"response": []
+				},
+				{
+					"name": "Get list of installed iAppLX RPMs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4e61e526-5a0a-48f3-8093-1eb1ca5365ed",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "https://{{host}}/mgmt/shared/iapp/package-management-tasks/",
+						"description": "Note, there may be several for elements such as APM's AGC."
+					},
+					"response": []
+				},
+				{
+					"name": "Uninstall RPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f270fb76-2db2-4969-b5d7-e5b85374385b",
+								"exec": [
+									"var respData = JSON.parse(responseBody);",
+									"",
+									"tests[\"response has id: \" +respData.id] = respData.id;",
+									"",
+									"postman.setEnvironmentVariable('rpm_installation_status_id',respData.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\"operation\": \"INSTALL\",\r\"packageFilePath\": \"/var/config/rest/downloads/{{as3rpmFileName}}\"\r}"
+						},
+						"url": "https://{{host}}/mgmt/shared/iapp/package-management-tasks/{{rpm_installation_status_id}}",
+						"description": "Request installs the RPM on the BIG-IP. This will not be necessary once AS3 container support is added in subsequent versions.\n"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "General Operations",
+			"item": [
+				{
+					"name": "Get list of deployed declarations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "Get list of deployed declarations with defaults",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{host}}/mgmt/shared/appsvcs/declare?show=expanded",
+							"protocol": "https",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							],
+							"query": [
+								{
+									"key": "show",
+									"value": "expanded"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete ALL declarations",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"syncToGroup\": \"/Common/sync-failover-dg\"\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d2ccd1a0-2633-4baf-898d-56f74369069c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "64db57ef-f720-471e-b2e4-a942ba01ac8c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Deploy Example GTM Applications",
+			"item": [
+				{
+					"name": "All GSLB 3.9.0 Examples",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"constants\": {\r\n        \"class\": \"Constants\",\r\n        \"version\": \"3.9.0\",\r\n        \"timestamp\": \"2018-12-10T19:23:45Z\",\r\n        \"newConstant\": 100\r\n    },\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"label\": \"commonTenant\",\r\n        \"remark\": \"Declaration Common tenant\",\r\n        \"enable\": true,\r\n        \"Shared\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"shared\",\r\n            \"enable\": true,\r\n            \"testServer\": {\r\n                \"class\": \"GSLB_Server\",\r\n                \"dataCenter\": {\r\n                    \"use\": \"testDataCenter\"\r\n                },\r\n                \"devices\": [\r\n                    {\r\n                        \"address\": \"1.2.3.7\"\r\n                    }\r\n                ],\r\n                \"virtualServers\": [\r\n                    {\r\n                        \"address\": \"1.2.3.8\",\r\n                        \"port\": 5050\r\n                    },\r\n                    {\r\n                        \"address\": \"2001:0db8:85a3:0000:0000:8a2e:0370:7334\",\r\n                        \"port\": 5051\r\n                    }\r\n                ]\r\n            },\r\n            \"testDataCenter\": {\r\n                \"class\": \"GSLB_Data_Center\"\r\n            },\r\n            \"testDomain\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"example.edu\",\r\n                \"resourceRecordType\": \"A\"\r\n            }\r\n        },\r\n        \"constants\": {\r\n            \"class\": \"Constants\",\r\n            \"someConstant\": \"A new constant\"\r\n        },\r\n        \"controls\": {\r\n            \"class\": \"Controls\",\r\n            \"logLevel\": \"error\",\r\n            \"trace\": true,\r\n            \"fortune\": false\r\n        }\r\n    },\r\n    \"controls\": {\r\n        \"class\": \"Controls\",\r\n        \"logLevel\": \"error\",\r\n        \"trace\": true,\r\n        \"archiveId\": \"\",\r\n        \"archiveTimestamp\": \"2018-12-10T19:23:45Z\"\r\n    },\r\n    \"TEST_GSLB_Domain_41\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"test.domainA\",\r\n                \"resourceRecordType\": \"A\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Domain_42\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"test.domainAAAA\",\r\n                \"resourceRecordType\": \"AAAA\",\r\n                \"enabled\": false,\r\n                \"pools\": [\r\n                    {\r\n                        \"use\": \"poolAAAA1\"\r\n                    },\r\n                    {\r\n                        \"use\": \"poolAAAA2\"\r\n                    }\r\n                ]\r\n            },\r\n            \"poolAAAA1\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"AAAA\"\r\n            },\r\n            \"poolAAAA2\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"AAAA\"\r\n            },\r\n            \"poolCNAME1\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"CNAME\"\r\n            },\r\n            \"poolCNAME2\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"CNAME\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Domain_43\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"type.changes\",\r\n                \"resourceRecordType\": \"MX\",\r\n                \"enabled\": true,\r\n                \"poolLbMode\": \"ratio\",\r\n                \"aliases\": [\r\n                    \"?.test.mx\"\r\n                ],\r\n                \"lastResortPool\": {\r\n                    \"use\": \"pool2\"\r\n                },\r\n                \"lastResortPoolType\": \"MX\"\r\n            },\r\n            \"pool1\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"CNAME\"\r\n            },\r\n            \"pool2\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"MX\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Monitor_44\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"http\",\r\n                \"target\": \"1.1.1.1:80\",\r\n                \"interval\": 100,\r\n                \"timeout\": 1000,\r\n                \"probeTimeout\": 110,\r\n                \"ignoreDownResponseEnabled\": true,\r\n                \"transparent\": true,\r\n                \"reverseEnabled\": true,\r\n                \"send\": \"HEAD / HTTP/1.0\\\\r\\\\n\",\r\n                \"receive\": \"HTTP\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Monitor_45\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"https\",\r\n                \"ciphers\": \"DEFAULT:+SHA:+3DES\",\r\n                \"clientCertificate\": \"theCert\"\r\n            },\r\n            \"theCert\": {\r\n                \"class\": \"Certificate\",\r\n                \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\r\n                \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\r\n                \"passphrase\": {\r\n                    \"ciphertext\": \"ZjVmNQ==\",\r\n                    \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\",\r\n                    \"ignoreChanges\": true,\r\n                    \"miniJWE\": true,\r\n                    \"allowReuse\": false\r\n                },\r\n                \"chainCA\": \"-----BEGIN CERTIFICATE-----\\nMIID9TCCAt2gAwIBAgIJALxQA/NW2bpRMA0GCSqGSIb3DQEBCwUAMIGQMQswCQYDVQQGEwJVUzETMBEGA1UECAwKV2FzaGluZ3RvbjEQMA4GA1UEBwwHU2VhdHRsZTELMAkGA1UECgwCRjUxDTALBgNVBAsMBFRlc3QxFzAVBgNVBAMMDnRlc3RfQ0FfYnVuZGxlMSUwIwYJKoZIhvcNAQkBFhZzb21lYm9keUBzb21ld2hlcmUub3JnMB4XDTE4MDIyNzE5MjEyNVoXDTE4MDMyOTE5MjEyNVowgZAxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMQswCQYDVQQKDAJGNTENMAsGA1UECwwEVGVzdDEXMBUGA1UEAwwOdGVzdF9DQV9idW5kbGUxJTAjBgkqhkiG9w0BCQEWFnNvbWVib2R5QHNvbWV3aGVyZS5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCjhUZmbwwuMMFTNic73t0mfJ/pyM3BnEs0riv6lbrF5znFKBlAM2pxWBfkQvr92gUwitij7BqMagnR26/C7GcJJNJQGNK482vgSPhUpGeN0t4W71Dv5SpwJN+0do6gV0eXPwvcgA/XZxXqZAePwXTp36YMrNTgw49OWZpHoNXfYCZ+1KUL032RdQ/Ik2wO/UwV0csL1Rwuu2L8/NI9VtrThCAr8dsMsDJ53jDh7xQdP3K2V9NYtAHk66697kk7TpzR1moqTJxSVaPKo2eDuKNke1BRbjYWoamu0hfC5YG6l5P9i8QaVklbtmDcmoLpU9fLVSSW6CWHkrtdifQiCOChAgMBAAGjUDBOMB0GA1UdDgQWBBRv7/Q0VoBgDYzgJOKLz4GsgXP27zAfBgNVHSMEGDAWgBRv7/Q0VoBgDYzgJOKLz4GsgXP27zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQA9r6+6hGVlQ188l+wLFJ1wI83y27BdtE0ZsZGdFv98qi9kcUm17Z0tprEwypODZ1/syt9b1JhD4RgU30qwgeF4kec8UpoG49UkQImRD3AqfsiYSdjZeBpcpEl3n8lkjKGoVY7GB2lMGoWDxv/1A0CSjVTmWgQSFGHoMtzOW1tCr9yGXVEdy691l7PVC1kK5ekwkO8YbSO6hvV/u83KuUiGcIoY1PIzAK301i9YXWUNxybIVfHregoQ11QzjhfdfpOLBTtW1B4QZqZz8qFGIr1remmQK3ljEcct9bWjMLOx2QYMvk6uRFzh+V5L2UnhldNy5wQYMXRDz6SU3LdTJ2OA\\n-----END CERTIFICATE-----\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Monitor_46\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"gateway-icmp\",\r\n                \"probeAttempts\": 25,\r\n                \"probeInterval\": 33\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Monitor_47\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"tcp\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Monitor_48\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"udp\",\r\n                \"debugEnabled\": true\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_49\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"server\": {\r\n                            \"use\": \"/Common/Shared/testServer\"\r\n                        },\r\n                        \"virtualServer\": \"0\"\r\n                    }\r\n                ],\r\n                \"bpsLimit\": 5,\r\n                \"bpsLimitEnabled\": true,\r\n                \"ppsLimit\": 4,\r\n                \"ppsLimitEnabled\": true,\r\n                \"connectionsLimit\": 3,\r\n                \"connectionsLimitEnabled\": true,\r\n                \"maxAnswersReturned\": 10,\r\n                \"monitors\": [\r\n                    {\r\n                        \"bigip\": \"/Common/http\"\r\n                    },\r\n                    {\r\n                        \"bigip\": \"/Common/https\"\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"A\",\r\n                \"fallbackIP\": \"1.1.1.1\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_50\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"server\": {\r\n                            \"use\": \"/Common/Shared/testServer\"\r\n                        },\r\n                        \"virtualServer\": \"1\"\r\n                    }\r\n                ],\r\n                \"bpsLimit\": 5,\r\n                \"bpsLimitEnabled\": true,\r\n                \"ppsLimit\": 4,\r\n                \"ppsLimitEnabled\": true,\r\n                \"connectionsLimit\": 3,\r\n                \"connectionsLimitEnabled\": true,\r\n                \"maxAnswersReturned\": 10,\r\n                \"monitors\": [\r\n                    {\r\n                        \"bigip\": \"/Common/http\"\r\n                    },\r\n                    {\r\n                        \"bigip\": \"/Common/https\"\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"AAAA\",\r\n                \"fallbackIP\": \"::1:1:1\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_51\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"domainName\": \"example.com\",\r\n                        \"isDomainNameStatic\": true\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"CNAME\"\r\n            }\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_52\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"domainName\": {\r\n                            \"use\": \"/Common/Shared/testDomain\"\r\n                        },\r\n                        \"priority\": 42\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"MX\",\r\n                \"maxAnswersReturned\": 12\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Domain_41",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Domain_41\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"test.domainA\",\r\n                \"resourceRecordType\": \"A\"\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare",
+						"description": "Note that this will fail, why did it fail?"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Domain_42",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Domain_42\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"test.domainAAAA\",\r\n                \"resourceRecordType\": \"AAAA\",\r\n                \"enabled\": false,\r\n                \"pools\": [\r\n                    {\r\n                        \"use\": \"poolAAAA1\"\r\n                    },\r\n                    {\r\n                        \"use\": \"poolAAAA2\"\r\n                    }\r\n                ]\r\n            },\r\n            \"poolAAAA1\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"AAAA\"\r\n            },\r\n            \"poolAAAA2\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"AAAA\"\r\n            },\r\n            \"poolCNAME1\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"CNAME\"\r\n            },\r\n            \"poolCNAME2\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"CNAME\"\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Domain_43",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Domain_43\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"type.changes\",\r\n                \"resourceRecordType\": \"MX\",\r\n                \"enabled\": true,\r\n                \"poolLbMode\": \"ratio\",\r\n                \"aliases\": [\r\n                    \"?.test.mx\"\r\n                ],\r\n                \"lastResortPool\": {\r\n                    \"use\": \"pool2\"\r\n                },\r\n                \"lastResortPoolType\": \"MX\"\r\n            },\r\n            \"pool1\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"CNAME\"\r\n            },\r\n            \"pool2\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"resourceRecordType\": \"MX\"\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Monitor_44",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Monitor_44\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"http\",\r\n                \"target\": \"1.1.1.1:80\",\r\n                \"interval\": 100,\r\n                \"timeout\": 1000,\r\n                \"probeTimeout\": 110,\r\n                \"ignoreDownResponseEnabled\": true,\r\n                \"transparent\": true,\r\n                \"reverseEnabled\": true,\r\n                \"send\": \"HEAD / HTTP/1.0\\\\r\\\\n\",\r\n                \"receive\": \"HTTP\"\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Monitor_45",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Monitor_45\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"https\",\r\n                \"ciphers\": \"DEFAULT:+SHA:+3DES\",\r\n                \"clientCertificate\": \"theCert\"\r\n            },\r\n            \"theCert\": {\r\n                \"class\": \"Certificate\",\r\n                \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\r\n                \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\r\n                \"passphrase\": {\r\n                    \"ciphertext\": \"ZjVmNQ==\",\r\n                    \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\",\r\n                    \"ignoreChanges\": true,\r\n                    \"miniJWE\": true,\r\n                    \"allowReuse\": false\r\n                },\r\n                \"chainCA\": \"-----BEGIN CERTIFICATE-----\\nMIID9TCCAt2gAwIBAgIJALxQA/NW2bpRMA0GCSqGSIb3DQEBCwUAMIGQMQswCQYDVQQGEwJVUzETMBEGA1UECAwKV2FzaGluZ3RvbjEQMA4GA1UEBwwHU2VhdHRsZTELMAkGA1UECgwCRjUxDTALBgNVBAsMBFRlc3QxFzAVBgNVBAMMDnRlc3RfQ0FfYnVuZGxlMSUwIwYJKoZIhvcNAQkBFhZzb21lYm9keUBzb21ld2hlcmUub3JnMB4XDTE4MDIyNzE5MjEyNVoXDTE4MDMyOTE5MjEyNVowgZAxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMQswCQYDVQQKDAJGNTENMAsGA1UECwwEVGVzdDEXMBUGA1UEAwwOdGVzdF9DQV9idW5kbGUxJTAjBgkqhkiG9w0BCQEWFnNvbWVib2R5QHNvbWV3aGVyZS5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCjhUZmbwwuMMFTNic73t0mfJ/pyM3BnEs0riv6lbrF5znFKBlAM2pxWBfkQvr92gUwitij7BqMagnR26/C7GcJJNJQGNK482vgSPhUpGeN0t4W71Dv5SpwJN+0do6gV0eXPwvcgA/XZxXqZAePwXTp36YMrNTgw49OWZpHoNXfYCZ+1KUL032RdQ/Ik2wO/UwV0csL1Rwuu2L8/NI9VtrThCAr8dsMsDJ53jDh7xQdP3K2V9NYtAHk66697kk7TpzR1moqTJxSVaPKo2eDuKNke1BRbjYWoamu0hfC5YG6l5P9i8QaVklbtmDcmoLpU9fLVSSW6CWHkrtdifQiCOChAgMBAAGjUDBOMB0GA1UdDgQWBBRv7/Q0VoBgDYzgJOKLz4GsgXP27zAfBgNVHSMEGDAWgBRv7/Q0VoBgDYzgJOKLz4GsgXP27zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQA9r6+6hGVlQ188l+wLFJ1wI83y27BdtE0ZsZGdFv98qi9kcUm17Z0tprEwypODZ1/syt9b1JhD4RgU30qwgeF4kec8UpoG49UkQImRD3AqfsiYSdjZeBpcpEl3n8lkjKGoVY7GB2lMGoWDxv/1A0CSjVTmWgQSFGHoMtzOW1tCr9yGXVEdy691l7PVC1kK5ekwkO8YbSO6hvV/u83KuUiGcIoY1PIzAK301i9YXWUNxybIVfHregoQ11QzjhfdfpOLBTtW1B4QZqZz8qFGIr1remmQK3ljEcct9bWjMLOx2QYMvk6uRFzh+V5L2UnhldNy5wQYMXRDz6SU3LdTJ2OA\\n-----END CERTIFICATE-----\"\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Monitor_46",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Monitor_46\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"gateway-icmp\",\r\n                \"probeAttempts\": 25,\r\n                \"probeInterval\": 33\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Monitor_47",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Monitor_47\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"tcp\"\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Monitor_48",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"TEST_GSLB_Monitor_48\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Monitor\",\r\n                \"monitorType\": \"udp\",\r\n                \"debugEnabled\": true\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Pool_49",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"label\": \"commonTenant\",\r\n        \"remark\": \"Declaration Common tenant\",\r\n        \"enable\": true,\r\n        \"Shared\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"shared\",\r\n            \"enable\": true,\r\n            \"testServer\": {\r\n                \"class\": \"GSLB_Server\",\r\n                \"dataCenter\": {\r\n                    \"use\": \"testDataCenter\"\r\n                },\r\n                \"devices\": [\r\n                    {\r\n                        \"address\": \"1.2.3.7\"\r\n                    }\r\n                ],\r\n                \"virtualServers\": [\r\n                    {\r\n                        \"address\": \"1.2.3.8\",\r\n                        \"port\": 5050\r\n                    },\r\n                    {\r\n                        \"address\": \"2001:0db8:85a3:0000:0000:8a2e:0370:7334\",\r\n                        \"port\": 5051\r\n                    }\r\n                ]\r\n            },\r\n            \"testDataCenter\": {\r\n                \"class\": \"GSLB_Data_Center\"\r\n            },\r\n            \"testDomain\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"example.edu\",\r\n                \"resourceRecordType\": \"A\"\r\n            }\r\n        },\r\n        \"constants\": {\r\n            \"class\": \"Constants\",\r\n            \"someConstant\": \"A new constant\"\r\n        },\r\n        \"controls\": {\r\n            \"class\": \"Controls\",\r\n            \"logLevel\": \"error\",\r\n            \"trace\": true,\r\n            \"fortune\": false\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_49\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"server\": {\r\n                            \"use\": \"/Common/Shared/testServer\"\r\n                        },\r\n                        \"virtualServer\": \"0\"\r\n                    }\r\n                ],\r\n                \"bpsLimit\": 5,\r\n                \"bpsLimitEnabled\": true,\r\n                \"ppsLimit\": 4,\r\n                \"ppsLimitEnabled\": true,\r\n                \"connectionsLimit\": 3,\r\n                \"connectionsLimitEnabled\": true,\r\n                \"maxAnswersReturned\": 10,\r\n                \"monitors\": [\r\n                    {\r\n                        \"bigip\": \"/Common/http\"\r\n                    },\r\n                    {\r\n                        \"bigip\": \"/Common/https\"\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"A\",\r\n                \"fallbackIP\": \"1.1.1.1\"\r\n            }\r\n        }\r\n    }\r\n}\r\n"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Pool_50",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"label\": \"commonTenant\",\r\n        \"remark\": \"Declaration Common tenant\",\r\n        \"enable\": true,\r\n        \"Shared\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"shared\",\r\n            \"enable\": true,\r\n            \"testServer\": {\r\n                \"class\": \"GSLB_Server\",\r\n                \"dataCenter\": {\r\n                    \"use\": \"testDataCenter\"\r\n                },\r\n                \"devices\": [\r\n                    {\r\n                        \"address\": \"1.2.3.7\"\r\n                    }\r\n                ],\r\n                \"virtualServers\": [\r\n                    {\r\n                        \"address\": \"1.2.3.8\",\r\n                        \"port\": 5050\r\n                    },\r\n                    {\r\n                        \"address\": \"2001:0db8:85a3:0000:0000:8a2e:0370:7334\",\r\n                        \"port\": 5051\r\n                    }\r\n                ]\r\n            },\r\n            \"testDataCenter\": {\r\n                \"class\": \"GSLB_Data_Center\"\r\n            },\r\n            \"testDomain\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"example.edu\",\r\n                \"resourceRecordType\": \"A\"\r\n            }\r\n        },\r\n        \"constants\": {\r\n            \"class\": \"Constants\",\r\n            \"someConstant\": \"A new constant\"\r\n        },\r\n        \"controls\": {\r\n            \"class\": \"Controls\",\r\n            \"logLevel\": \"error\",\r\n            \"trace\": true,\r\n            \"fortune\": false\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_50\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"server\": {\r\n                            \"use\": \"/Common/Shared/testServer\"\r\n                        },\r\n                        \"virtualServer\": \"1\"\r\n                    }\r\n                ],\r\n                \"bpsLimit\": 5,\r\n                \"bpsLimitEnabled\": true,\r\n                \"ppsLimit\": 4,\r\n                \"ppsLimitEnabled\": true,\r\n                \"connectionsLimit\": 3,\r\n                \"connectionsLimitEnabled\": true,\r\n                \"maxAnswersReturned\": 10,\r\n                \"monitors\": [\r\n                    {\r\n                        \"bigip\": \"/Common/http\"\r\n                    },\r\n                    {\r\n                        \"bigip\": \"/Common/https\"\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"AAAA\",\r\n                \"fallbackIP\": \"::1:1:1\"\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Pool_51",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"label\": \"commonTenant\",\r\n        \"remark\": \"Declaration Common tenant\",\r\n        \"enable\": true,\r\n        \"Shared\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"shared\",\r\n            \"enable\": true,\r\n            \"testServer\": {\r\n                \"class\": \"GSLB_Server\",\r\n                \"dataCenter\": {\r\n                    \"use\": \"testDataCenter\"\r\n                },\r\n                \"devices\": [\r\n                    {\r\n                        \"address\": \"1.2.3.7\"\r\n                    }\r\n                ],\r\n                \"virtualServers\": [\r\n                    {\r\n                        \"address\": \"1.2.3.8\",\r\n                        \"port\": 5050\r\n                    },\r\n                    {\r\n                        \"address\": \"2001:0db8:85a3:0000:0000:8a2e:0370:7334\",\r\n                        \"port\": 5051\r\n                    }\r\n                ]\r\n            },\r\n            \"testDataCenter\": {\r\n                \"class\": \"GSLB_Data_Center\"\r\n            },\r\n            \"testDomain\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"example.edu\",\r\n                \"resourceRecordType\": \"A\"\r\n            }\r\n        },\r\n        \"constants\": {\r\n            \"class\": \"Constants\",\r\n            \"someConstant\": \"A new constant\"\r\n        },\r\n        \"controls\": {\r\n            \"class\": \"Controls\",\r\n            \"logLevel\": \"error\",\r\n            \"trace\": true,\r\n            \"fortune\": false\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_51\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"domainName\": \"example.com\",\r\n                        \"isDomainNameStatic\": true\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"CNAME\"\r\n            }\r\n        }\r\n    }\r\n}\r\n"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				},
+				{
+					"name": "AS3 Example: TEST_GSLB_Pool_52",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip1_admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"updateMode\": \"selective\",\r\n    \"schemaVersion\": \"3.9.0\",\r\n    \"id\": \"declarationId\",\r\n    \"label\": \"theDeclaration\",\r\n    \"remark\": \"All properties declaration\",\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"label\": \"commonTenant\",\r\n        \"remark\": \"Declaration Common tenant\",\r\n        \"enable\": true,\r\n        \"Shared\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"shared\",\r\n            \"enable\": true,\r\n            \"testServer\": {\r\n                \"class\": \"GSLB_Server\",\r\n                \"dataCenter\": {\r\n                    \"use\": \"testDataCenter\"\r\n                },\r\n                \"devices\": [\r\n                    {\r\n                        \"address\": \"1.2.3.7\"\r\n                    }\r\n                ],\r\n                \"virtualServers\": [\r\n                    {\r\n                        \"address\": \"1.2.3.8\",\r\n                        \"port\": 5050\r\n                    },\r\n                    {\r\n                        \"address\": \"2001:0db8:85a3:0000:0000:8a2e:0370:7334\",\r\n                        \"port\": 5051\r\n                    }\r\n                ]\r\n            },\r\n            \"testDataCenter\": {\r\n                \"class\": \"GSLB_Data_Center\"\r\n            },\r\n            \"testDomain\": {\r\n                \"class\": \"GSLB_Domain\",\r\n                \"domainName\": \"example.edu\",\r\n                \"resourceRecordType\": \"A\"\r\n            }\r\n        },\r\n        \"constants\": {\r\n            \"class\": \"Constants\",\r\n            \"someConstant\": \"A new constant\"\r\n        },\r\n        \"controls\": {\r\n            \"class\": \"Controls\",\r\n            \"logLevel\": \"error\",\r\n            \"trace\": true,\r\n            \"fortune\": false\r\n        }\r\n    },\r\n    \"TEST_GSLB_Pool_52\": {\r\n        \"class\": \"Tenant\",\r\n        \"Application\": {\r\n            \"class\": \"Application\",\r\n            \"template\": \"generic\",\r\n            \"testItem\": {\r\n                \"class\": \"GSLB_Pool\",\r\n                \"enabled\": false,\r\n                \"lbModeAlternate\": \"ratio\",\r\n                \"lbModeFallback\": \"ratio\",\r\n                \"manualResumeEnabled\": true,\r\n                \"verifyMemberEnabled\": false,\r\n                \"qosHitRatio\": 10,\r\n                \"qosHops\": 11,\r\n                \"qosKbps\": 8,\r\n                \"qosLinkCapacity\": 35,\r\n                \"qosPacketRate\": 5,\r\n                \"qosRoundTripTime\": 75,\r\n                \"qosTopology\": 3,\r\n                \"qosVirtualServerCapacity\": 2,\r\n                \"qosVirtualServerScore\": 1,\r\n                \"members\": [\r\n                    {\r\n                        \"ratio\": 10,\r\n                        \"domainName\": {\r\n                            \"use\": \"/Common/Shared/testDomain\"\r\n                        },\r\n                        \"priority\": 42\r\n                    }\r\n                ],\r\n                \"resourceRecordType\": \"MX\",\r\n                \"maxAnswersReturned\": 12\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": "https://{{host}}/mgmt/shared/appsvcs/declare"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0622c4c0-dd57-4cdf-92cd-00622e6248aa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7055976f-0e2b-4bbe-9b46-c0660d69405f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

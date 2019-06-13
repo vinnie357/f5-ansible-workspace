@@ -1,0 +1,6 @@
+---
+# tasks file for f5-bigiq-as3
+
+- import_tasks: auth.yml
+- import_tasks: create_as3.yml
+- import_tasks: run_as3.yml

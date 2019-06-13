@@ -1,0 +1,5 @@
+---
+# tasks file for f5-bigiq
+
+- import_tasks: auth.yml
+- import_tasks: inventory.yml

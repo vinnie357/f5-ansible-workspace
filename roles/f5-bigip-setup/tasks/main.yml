@@ -1,0 +1,57 @@
+---
+# tasks file for f5-bigip-setup
+- import_tasks: status.yml
+- import_tasks: auth.yml
+# do
+- import_tasks: status.yml
+  when: "context.tasks.do"
+- import_tasks: check_for_do.yml
+  when: "context.tasks.do"
+- import_tasks: create_do.yml
+  when: "context.tasks.do"
+- import_tasks: run_do.yml
+  when: "context.tasks.do"
+- import_tasks: wait_for_do.yml
+  when: "context.tasks.do"
+# access
+- include_role:
+    name: f5-access
+  when: context.tasks.access and context.tasks.provision
+# as3
+- import_tasks: auth.yml
+  when: "context.tasks.as3"
+- import_tasks: status.yml
+  when: "context.tasks.as3"
+- import_tasks: check_for_as3.yml
+  when: "context.tasks.as3"
+- import_tasks: create_as3.yml
+  when: "context.tasks.as3"
+- import_tasks: run_as3.yml
+  when: "context.tasks.as3"
+- import_tasks: wait_for_as3.yml
+  when: "context.tasks.as3"
+
+# ts
+- import_tasks: auth.yml
+  when: "context.tasks.ts"
+- import_tasks: status.yml
+  when: "context.tasks.ts"
+- import_tasks: wait_for_ts.yml
+  when: "context.tasks.ts"
+- import_tasks: run_ts.yml
+  when: "context.tasks.ts"
+- import_tasks: wait_for_ts.yml
+  when: "context.tasks.ts"
+
+  # apm
+- import_tasks: auth.yml
+- import_tasks: status.yml
+  when: "context.tasks.apm"
+- import_tasks: create_tunnel.yml
+  when: "context.tasks.apm"
+- import_tasks: create_cp.yml
+  when: "context.tasks.apm"
+- import_tasks: create_cp_settings.yml
+  when: "context.tasks.apm"
+- import_tasks: run_apm.yml
+  when: "context.tasks.apm"

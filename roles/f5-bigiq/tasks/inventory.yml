@@ -1,0 +1,49 @@
+---
+# Ansible playbook to import F5 BIG-IQ device inventory to Ansible INI inventory
+
+# fetches bigiq device list via api, 
+# creates ansible ini inventory file with some header info
+# and adds bigiq devices
+
+# header information includes date/time and source hostname/IP
+
+- name: Calling API to get BIG-IQ device list for Ansible inventory
+  uri:
+    url: https://{{ provider.server }}/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices?$select=hostname,managementAddress
+    method: GET
+    return_content: yes
+    status_code: 200
+    validate_certs: no
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+      Content-Type: "application/json"
+      body_format: json
+  register: json_response
+  delegate_to: localhost
+
+- name: Check and delete inventory file if there
+  file:
+    path: "{{ dest_file }}"
+    state: absent
+  delegate_to: localhost
+
+- name: Create file and add inventory header information
+  lineinfile:
+    dest: "{{ dest_file }}"
+    line: "{{ item }}"
+    create: yes
+  loop:
+    - "\n"
+    - "# Ansible inventory imported from {{ provider.name }} @ {{ provider.server }}"
+    #- "# Imported on {{ ansible_date_time.iso8601 }}"
+    - "\n"
+    - "[bigiq_devices]"
+  delegate_to: localhost
+
+- name: Add bigiq managed bigip devices to file
+  lineinfile:
+    dest: "{{ dest_file }}"
+    line: "{{ item.hostname }}     ansible_host={{ item.managementAddress }}"
+  loop: "{{ json_response['json']['items'] }}"
+  delegate_to: localhost
+

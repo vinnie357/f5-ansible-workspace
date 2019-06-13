@@ -1,0 +1,29 @@
+# update me to us stat module
+# https://docs.ansible.com/ansible/latest/modules/stat_module.html
+- name: find rpm list
+  find:
+    paths: "{{ rpmPath }}"
+    patterns: "*.rpm"
+  register: rpm_list
+  delegate_to: localhost
+
+- name: validate checksums
+  shell: |
+    FN={{ item.path }}
+    #echo $FN
+    FSUM=$(sha256sum $FN | cut --field=1 --delimiter=' ' 1> /dev/null 2> /dev/null)
+    CHECKSUM=$(cat $FN.sha256 | cut --field=1 --delimiter=' ' 1> /dev/null 2> /dev/null)
+    if ["$FSUM" == "$CHECKSUM"]; then
+        #echo "continue"
+        exit 0
+    else 
+        #echo "check rpm downloads"
+        #echo "$FSUM"
+        #echo "$CHECKSUM"
+        exit 1
+    fi
+    exit 0
+  args:
+    executable: /bin/bash
+  loop: "{{ rpm_list.files|default([0]) }}"
+  delegate_to: localhost

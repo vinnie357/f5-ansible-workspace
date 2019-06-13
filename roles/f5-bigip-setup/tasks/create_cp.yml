@@ -1,0 +1,7 @@
+  - name: Create conectivity profile File
+    template:
+      src: "connectivity_profile.j2"
+      dest: "{{filePath}}/{{item.name}}_cp.json"
+      mode: 'preserve'
+    delegate_to: localhost
+    loop: "{{ as3List }}"

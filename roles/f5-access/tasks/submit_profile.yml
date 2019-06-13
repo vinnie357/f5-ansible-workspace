@@ -1,0 +1,29 @@
+- name: access profiles
+  find:
+    paths: "{{ filePath }}"
+    patterns: "*_ap.json"
+  register: profile_list
+  delegate_to: localhost
+
+# - set_fact:
+#     postbody: "{{ lookup('file', item.path, errors='strict' ) }}"
+#   loop: "{{ profile_list.files }}"
+
+- name: POST Create Policy
+  uri:
+    url: "https://{{ provider.server }}{{ restBashUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    # body: | 
+    #   {
+    #   "{{postbody}}"
+    #   }
+    body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 202, 200
+  register: policyResult
+  loop: "{{ profile_list.files }}"
+  delegate_to: localhost

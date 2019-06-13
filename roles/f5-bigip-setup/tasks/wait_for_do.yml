@@ -1,0 +1,16 @@
+- name: wait for DO
+  uri: 
+    url: "https://{{ provider.server }}{{ doUrl }}"
+    method: GET
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    status_code: 200, 422
+  register: do_waitStatus
+  until: do_waitStatus is success
+  retries: 25
+  delay: 60
+  delegate_to: localhost
+  when: token.json.token.token != ""
+

@@ -1,0 +1,10 @@
+---
+# tasks file for f5-ve-vmware
+- import_tasks: auth.yml
+- import_tasks: check_for_vm.yml
+- import_tasks: provision_ve.yml
+  when: context.tasks.provision
+- import_tasks: power_off_vm.yml
+  when: not context.tasks.provision
+- import_tasks: delete_vm.yml
+  when: not context.tasks.provision

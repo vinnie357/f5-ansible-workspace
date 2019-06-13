@@ -1,0 +1,22 @@
+---
+# vars file for f5-bigip-setup
+# host
+authUrl: "/mgmt/shared/authn/login"
+filePath: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+# do
+doUrl: "/mgmt/shared/declarative-onboarding"
+doFilePath: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/do.json"
+doList: "{{ lookup('vars', 'context.do.devices', default=provider.do.devices)}}"
+
+# as3
+as3Url: "/mgmt/shared/appsvcs/declare"
+as3CheckUrl: "/mgmt/shared/appsvcs/info"
+as3FilePath: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/as3.json"
+as3List: "{{ lookup('vars', 'context.as3.apps', default=provider.as3.apps)}}"
+# ts
+tsUrl: "/mgmt/shared/telemetry/declare"
+tsCheckUrl: "/mgmt/shared/telemetry/declare"
+tsFilePath: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/ts.json"
+# apm
+cpURL: "/mgmt/tm/apm/profile/connectivity/"
+tunnelURL: "/mgmt/tm/net/tunnels/tunnel/"

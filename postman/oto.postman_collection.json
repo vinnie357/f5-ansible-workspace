@@ -1,0 +1,487 @@
+{
+	"info": {
+		"_postman_id": "ae7abbd3-a043-49ad-8573-551f3e2432cc",
+		"name": "oto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "old",
+			"item": [
+				{
+					"name": "start",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "start",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "start example"
+					},
+					"response": []
+				},
+				{
+					"name": "start copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "start",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "start example"
+					},
+					"response": []
+				},
+				{
+					"name": "start copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "start",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "start example"
+					},
+					"response": []
+				},
+				{
+					"name": "start copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "start",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "start example"
+					},
+					"response": []
+				},
+				{
+					"name": "stop",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "stop",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "stop example"
+					},
+					"response": []
+				},
+				{
+					"name": "stop copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "stop",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "stop example"
+					},
+					"response": []
+				},
+				{
+					"name": "stop copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "stop",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "stop example"
+					},
+					"response": []
+				},
+				{
+					"name": "stop copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "stop",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.14:5000/",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"14"
+							],
+							"port": "5000",
+							"path": [
+								""
+							]
+						},
+						"description": "stop example"
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "start post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "testing for target start posts to /start"
+					},
+					"response": []
+				},
+				{
+					"name": "start post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "charset",
+								"value": "UTF-8"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "[\"13\",\"15\"]",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "\"14\"",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "[\"13\",\"14\",\"15\",\"16\",\"17\"]",
+									"type": "text"
+								},
+								{
+									"key": "action",
+									"value": "\"start\"",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "action",
+									"value": "\"stop\"",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{oto_ethernet}}/start",
+							"protocol": "http",
+							"host": [
+								"{{oto_ethernet}}"
+							],
+							"path": [
+								"start"
+							]
+						},
+						"description": "testing for target start posts to /start"
+					},
+					"response": []
+				},
+				{
+					"name": "target_api_start",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "start",
+									"type": "text"
+								},
+								{
+									"key": "action",
+									"value": "stop",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://192.168.110.13:3000/target/api",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"110",
+								"13"
+							],
+							"port": "3000",
+							"path": [
+								"target",
+								"api"
+							]
+						},
+						"description": "start example for nodejs API"
+					},
+					"response": []
+				},
+				{
+					"name": "target_api_start Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "rds=0&htdmin=1&htdmax=4&ttupmin=1&ttupmax=2&action=start&type=popper"
+						},
+						"url": {
+							"raw": "http://192.168.100.100:3000/target/api",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"100",
+								"100"
+							],
+							"port": "3000",
+							"path": [
+								"target",
+								"api"
+							]
+						},
+						"description": "start example for nodejs API"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Serverside",
+			"item": [
+				{
+					"name": "post stats",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"targetID\": \"01\",\r\n    \"hitNumber\": 3,\r\n    \"time\": 1.20009,\r\n    \"down\": false,\r\n    \"type\": \"gopher\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"stats"
+							]
+						},
+						"description": "example post stats"
+					},
+					"response": []
+				}
+			],
+			"description": "server side testing calls"
+		},
+		{
+			"name": "clientside",
+			"item": [],
+			"description": "client side testing calls"
+		}
+	]
+}

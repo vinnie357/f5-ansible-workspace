@@ -1,0 +1,113 @@
+{
+    "schemaVersion": "1.1.0",
+    "class": "Device",
+    "async": true,
+    "label": "License BIG-IP via BIG-IQ when BIG-IP is reachable from BIG-IQ",
+    "Common": {
+    	"class": "Tenant",
+        "hostname": "{{ item.hostname}}",
+        "myLicense": {
+            "class": "License",
+            "licenseType": "licensePool",
+            "bigIqHost": "{{bigiq.host}}",
+            "bigIqUsername": "{{bigiq.user}}",
+            "bigIqPassword": "{{bigiq.password}}",
+            "licensePool": "{{bigiq.licensepool}}",
+            "skuKeyword1": "key1",
+            "skuKeyword2": "key2",
+            "unitOfMeasure": "hourly",
+            "reachable": true,
+            "bigIpUsername": "{{provider.user}}",
+            "bigIpPassword": "{{provider.password}}"
+        },
+        "myDns": {
+            "class": "DNS",
+            "nameServers": [
+            	"192.168.2.251"
+            ],
+            "search": [
+                "vinlab.local",
+                "vin-lab.com"
+            ]
+        },
+        "myNtp": {
+            "class": "NTP",
+            "servers": [
+            	"0.pool.ntp.org",
+                "1.pool.ntp.org"
+            ],
+            "timezone": "EST"
+        },
+        "myProvisioning": {
+        	"class": "Provision",
+        	"apm": "nominal"
+        },
+        "external": {
+            "class": "VLAN",
+            "tag": 1234,
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "{{item.network.vlans.external.interface}}",
+                    
+                    "tagged": false
+                }
+            ]
+        },
+        "internal": {
+            "class": "VLAN",
+            "tag": 1235,
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "{{item.network.vlans.internal.interface}}",
+                    "tagged": false
+                }
+            ]
+        },
+        "ha": {
+            "class": "VLAN",
+            "tag": 1236,
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "{{item.network.vlans.ha.interface}}",
+                    "tagged": false
+                }
+            ]
+        },
+        "external-self": {
+            "class": "SelfIp",
+            "address": "{{item.network.vlans.external.selfipnf}}",
+            "vlan": "external",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "internal-self": {
+            "class": "SelfIp",
+            "address": "{{item.network.vlans.internal.selfipnf}}",
+            "vlan": "internal",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "ha-self": {
+            "class": "SelfIp",
+            "address": "{{item.network.vlans.ha.selfipnf}}",
+            "vlan": "ha",
+            "allowService": "default",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "default_gw": {
+            "class": "Route",
+            "gw": "{{item.network.routes.default.gateway}}",
+            "network": "default",
+            "mtu": 1500
+        },
+        "dbvars": {
+            "class": "DbVariables",
+            "ui.advisory.enabled": true,
+            "ui.advisory.color": "green",
+            "ui.advisory.text": "/Common/hostname"
+        }
+    }
+}

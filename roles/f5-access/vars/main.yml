@@ -1,0 +1,5 @@
+---
+# vars file for f5-access
+restBashUrl: "/mgmt/tm/util/bash"
+authUrl: "/mgmt/shared/authn/login"
+filePath: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"

@@ -1,0 +1,31 @@
+- name: Deploy all
+  hosts: "{{context.target}}"
+  gather_facts: false
+  serial: 2
+
+  vars:
+    provider: "{{ hostvars[inventory_hostname]['provider'] }}"
+
+  tasks:
+  - include_role:
+      name: f5-ve-vmware
+    when: "context.tasks.vmware"
+  - include_role:
+      name: f5-atc
+    when: context.tasks.atc and context.tasks.provision
+  # - include_role:
+  #     name: f5-access
+  #   when: "context.tasks.access"
+  - include_role:
+      name: f5-bigip-setup
+    # when: ( context.tasks.as3 or context.tasks.apm and context.tasks.provision )
+    when: ( context.tasks.as3 and context.tasks.provision) or ( context.tasks.apm and context.tasks.provision ) or ( context.tasks.do and context.tasks.provision )
+  # - include_role:
+  #     name: f5-bigip-setup
+  #   when: context.tasks.apm and context.tasks.provision
+  - include_role:
+      name: vmware-vmotion
+    when: "context.tasks.vmotion"
+  - include_role:
+      name: f5-bigiq-as3
+    when: "context.tasks.bigiq_as3"

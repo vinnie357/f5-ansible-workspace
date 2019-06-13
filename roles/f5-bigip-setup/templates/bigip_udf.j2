@@ -1,0 +1,96 @@
+{
+    "schemaVersion": "1.0.0",
+    "class": "Device",
+    "label": "Basic onboarding",
+    "Common": {
+        "class": "Tenant",
+        "hostname": "{{item.hostname}}",
+        "dbvars": {
+        	"class": "DbVariables",
+        	"ui.advisory.enabled": true,
+        	"ui.advisory.color": "green",
+        	"ui.advisory.text": "{{item.banner}}"
+        },
+        "myLicense": {
+            "class": "License",
+            "licenseType": "regKey",
+            "regKey": "{{item.licenseKey}}"
+        },
+        "myDns": {
+            "class": "DNS",
+            "nameServers": [
+                "10.1.255.254"
+            ],
+            "search": [
+                "f5apmlab.net"
+            ]
+        },
+        "myNtp": {
+            "class": "NTP",
+            "servers": [
+                "0.pool.ntp.org",
+                "1.pool.ntp.org",
+                "2.pool.ntp.org"
+            ],
+            "timezone": "PST"
+        },
+        "myProvisioning": {
+            "class": "Provision",
+            "apm": "nominal"
+        },
+        "Server_Network": {
+            "class": "VLAN",
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "{{item.network.vlans.Server_Network.interface}}"
+                }
+            ]
+        },
+        "Server_Network-self": {
+            "class": "SelfIp",
+            "address": "{{item.network.vlans.Server_Network.selfipnf}}",
+            "vlan": "Server_Network",
+            "allowService": "default",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "external": {
+            "class": "VLAN",
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "{{item.network.vlans.external.interface}}"
+                }
+            ]
+        },
+        "external-self": {
+            "class": "SelfIp",
+            "address": "{{item.network.vlans.external.selfipnf}}",
+            "vlan": "external",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "internal": {
+            "class": "VLAN",
+            "mtu": 1500,
+            "interfaces": [
+                {
+                    "name": "{{item.network.vlans.internal.interface}}"
+                }
+            ]
+        },
+        "internal-self": {
+            "class": "SelfIp",
+            "address": "{{item.network.vlans.internal.selfipnf}}",
+            "vlan": "internal",
+            "allowService": "none",
+            "trafficGroup": "traffic-group-local-only"
+        },
+        "default": {
+            "class": "Route",
+            "gw": "{{item.network.routes.default.gateway}}",
+            "network": "default",
+            "mtu": 1500
+        }
+    }
+}

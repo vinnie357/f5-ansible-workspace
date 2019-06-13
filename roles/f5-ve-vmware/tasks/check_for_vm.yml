@@ -1,0 +1,17 @@
+- name: check for VM
+  uri:
+    url: "https://{{ vcenter.host }}{{ vmUrl }}?filter.names.1={{provider.name}}"
+    method: GET
+    headers:
+      vmware-api-session-id: "{{ vcenterToken.json.value }}"
+    return_content: true
+    validate_certs: false
+    status_code: 200
+  register: vmStatus
+  retries: 3
+  delay: 30
+  delegate_to: localhost
+
+# - name: log vm match name
+#   debug:
+#     msg: "{{vmStatus.json.value}}"

@@ -1,0 +1,28 @@
+- name: POST Create Policy
+  uri:
+    url: "https://{{ provider.server }}{{ restBashUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: | 
+        { 
+        "command": "run","utilCmdArgs": "-c 'echo -e \" create cli transaction; 
+        create apm policy access-policy {{item.name}};
+        create apm policy customization-group {{item.name}}_logout type logout;
+        create apm policy customization-group {{item.name}}_errormap type errormap;
+        create apm policy customization-group {{item.name}}_eps type eps;
+        create apm policy customization-group {{item.name}}_frameworkinstallation type framework-installation;
+        create apm policy customization-group {{item.name}}_general_ui type general-ui;
+        create apm profile access {{item.name}} access-policy {{item.name}} accept-languages add { {{item.language}} } log-settings replace-all-with  { {{item.logProfile}} };
+        submit cli transaction\" | tmsh -q'"
+        }
+    status_code: 202, 200
+  register: policyResult
+  loop: "{{ provider.apm.profiles }}"
+  delegate_to: localhost
+
+# - debug:
+#     msg: "{{policyResult}}"

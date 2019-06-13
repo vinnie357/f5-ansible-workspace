@@ -1,0 +1,79 @@
+{
+  "kind": "tm:apm:profile:connectivity:client-policy:client-policystate",
+  "name": "{{item.name}}_cp",
+  "fullPath": "{{item.name}}_cp",
+  "generation": 405351,
+  "selfLink": "https://localhost/mgmt/tm/apm/profile/connectivity/~{{item.name}}~{{item.name}}_cp/client-policy/{{item.name}}_cp?ver=14.1.0",
+  "androidEc": {
+    "deviceLockMethod": "numeric",
+    "enableMobilesafe": "false",
+    "enforceDeviceLock": "true",
+    "enforceLogonMode": "false",
+    "logonMode": "native",
+    "maxInactivityTime": 5,
+    "minPasscodeLength": 4,
+    "requireDeviceAuth": "false",
+    "savePassword": "false",
+    "savePasswordMethod": "disk",
+    "savePasswordTimeout": 240
+  },
+  "androidEp": {
+    "deviceLockMethod": "numeric",
+    "enableMobilesafe": "false",
+    "enforceDeviceLock": "true",
+    "enforceLogonMode": "false",
+    "logonMode": "native",
+    "maxInactivityTime": 5,
+    "minPasscodeLength": 4,
+    "savePassword": "false",
+    "savePasswordMethod": "disk",
+    "savePasswordTimeout": 240
+  },
+  "chromeosEc": {
+    "enforceLogonMode": "false",
+    "logonMode": "native",
+    "savePassword": "false",
+    "savePasswordMethod": "disk",
+    "savePasswordTimeout": 240
+  },
+  "ec": {
+    "componentUpdate": "yes",
+    "reuseWinlogonCreds": "false",
+    "reuseWinlogonSession": "false",
+    "runLogoffScript": "false",
+    "savePassword": "false",
+    "savePasswordMethod": "disk",
+    "savePasswordTimeout": 240,
+    "saveServersOnExit": "true",
+    "warnBeforeScriptLaunch": "true"
+  },
+  "iosEc": {
+    "enableMobilesafe": "false",
+    "enforceLogonMode": "false",
+    "logonMode": "native",
+    "requireDeviceAuth": "false",
+    "savePassword": "false",
+    "savePasswordMethod": "disk",
+    "savePasswordTimeout": 240,
+    "vodDisconnectTimeout": 2
+  },
+  "iosEp": {
+    "enableMobilesafe": "false",
+    "enforceLogonMode": "false",
+    "enforcePinLock": "true",
+    "logonMode": "native",
+    "maxGracePeriod": 2,
+    "savePassword": "false",
+    "savePasswordMethod": "disk",
+    "savePasswordTimeout": 240
+  },
+  "locationSpecific": "false",
+  "macosEc": {
+    "enforceLogonMode": "false",
+    "logonMode": "native",
+    "savePassword": "false",
+    "savePasswordMethod": "disk",
+    "savePasswordTimeout": 240
+  },
+  "servers": {{item.apm.server_list}}
+}

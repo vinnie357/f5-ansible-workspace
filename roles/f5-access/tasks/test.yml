@@ -1,0 +1,17 @@
+- name: POST test
+  uri:
+    url: "https://{{ provider.server }}{{ restBashUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: | 
+      {"command":"run", "utilCmdArgs": "-c 'tmsh list ltm virtual'"}
+    status_code: 202, 200
+  register: Result
+  delegate_to: localhost
+
+- debug:
+    msg: "{{Result}}"

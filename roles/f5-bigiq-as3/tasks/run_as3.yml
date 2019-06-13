@@ -1,0 +1,67 @@
+#POST https://192.0.2.10/mgmt/shared/appsvcs/declare
+#
+# auth token
+# POST /mgmt/shared/authn/login
+# Host: {{bigip_host}}
+# Authorization: Basic {Base64encoded value of username:password}
+# Content-Type: application/json
+# {
+#     "username":"{userWithCorrectPerms}",
+#     "password":"{userPassword}",
+#     "loginProviderName":"tmos"
+# }
+# token timeout
+# PATCH /mgmt/shared/authz/tokens/{{bigip_auth_token}}
+# Host: {{bigip_host}}
+# Content-Type: application/json
+# X-F5-Auth-Token: {{bigip_auth_token}}
+# {
+#     "timeout":"36000" //this is the maximum
+# }
+# - debug:
+#     msg: "{{ token }}"
+# - debug:
+#     msg: "{{ token.json.token.token }}"
+# - name: check for AS3
+#   uri: 
+#     url: "https://{{ provider.server }}{{ as3CheckUrl }}"
+#     method: GET
+#     headers:
+#       X-F5-Auth-Token: "{{ token.json.token.token }}"
+#     return_content: true
+#     validate_certs: false
+#     status_code: 200
+#   register: as3Status
+#   delegate_to: localhost
+#   when: token.json.token.token != ""
+# - debug:
+#     msg: "{{ as3Status }}"
+# - debug:
+#     msg: "{{ as3FilePath }}"
+- name: as3 apps
+  find:
+    paths: "{{ filePath }}"
+    patterns: "*_as3.json"
+  register: app_list
+  delegate_to: localhost
+
+# - debug:
+#     msg: "{{ app_list }}"
+
+- name: POST AS3
+  uri:
+    url: "https://{{ bigiq.host }}{{ as3Url }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 200
+  register: as3Result
+  loop: "{{ app_list.files }}"
+  delegate_to: localhost
+# - debug:
+#     msg: "{{ as3Result }}"
+    #when: doStatus.json is search("/declaration/") 

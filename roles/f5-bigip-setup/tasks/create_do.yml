@@ -1,0 +1,17 @@
+  # - debug: 
+  #     msg: "{{item}}"
+  #   loop: "{{ doList }}"
+  # - debug: 
+  #     msg: "{{item.device.template}}"
+  #   loop: "{{ doList }}"
+  
+  - name: Create DO File
+    template:
+      src: "{{ item.template }}.j2"
+      dest: "{{doFilePath}}"
+      mode: 'preserve'
+    delegate_to: localhost
+    loop: "{{ doList }}"
+
+
+    

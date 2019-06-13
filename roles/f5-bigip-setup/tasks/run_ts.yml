@@ -1,0 +1,70 @@
+#POST to the URI https://<BIG-IP>/mgmt/shared/telemetry/declare
+#
+# auth token
+# POST /mgmt/shared/authn/login
+# Host: {{bigip_host}}
+# Authorization: Basic {Base64encoded value of username:password}
+# Content-Type: application/json
+# {
+#     "username":"{userWithCorrectPerms}",
+#     "password":"{userPassword}",
+#     "loginProviderName":"tmos"
+# }
+# token timeout
+# PATCH /mgmt/shared/authz/tokens/{{bigip_auth_token}}
+# Host: {{bigip_host}}
+# Content-Type: application/json
+# X-F5-Auth-Token: {{bigip_auth_token}}
+# {
+#     "timeout":"36000" //this is the maximum
+# }
+
+# - name: get auth token
+#   uri:
+#     url: "https://{{ provider.server }}/{{ authUrl }}"
+#     method: POST
+#     body_format: json
+#     user: "{{ provider.user }}"
+#     password: "{{ provider.password }}"
+#     return_content: true
+#     validate_certs: false
+#     body: {"username":"{{ provider.user }}","password":"{{ provider.password }}","loginProviderName":"tmos"}
+#     status_code: 200
+#   register: token
+#   delegate_to: localhost
+# - debug:
+#     msg: "{{ token }}"
+# - debug:
+#     msg: "{{ token.json.token.token }}"
+# - name: check for ts
+#   uri: 
+#     url: "https://{{ provider.server }}{{ tsCheckUrl }}"
+#     method: GET
+#     headers:
+#       X-F5-Auth-Token: "{{ token.json.token.token }}"
+#     return_content: true
+#     validate_certs: false
+#     status_code: 200
+#   register: tsStatus
+#   delegate_to: localhost
+#   when: token.json.token.token != ""
+# - debug:
+#     msg: "{{ tsStatus }}"
+# - debug:
+#     msg: "{{ tsFilePath }}"
+- name: POST ts
+  uri:
+    url: "https://{{ provider.server }}{{ tsUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file', tsFilePath, errors='strict' ) }}"
+    status_code: 200
+  register: tsResult
+  delegate_to: localhost
+- debug:
+    msg: "{{ tsResult }}"
+#     #when: doStatus.json is search("/declaration/") 

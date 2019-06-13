@@ -1,0 +1,53 @@
+- name: UnInstall Packages
+  bigip_iapplx_package:
+    package: "{{ item.path }}"
+    state: absent
+    provider:
+      server: "{{ provider.server }}"
+      server_port: "{{ provider.server_port}}"
+      transport: rest
+      user: "{{ provider.user }}"
+      password: "{{ provider.password }}"
+      validate_certs: no
+  loop: "{{ rpm_list.files|default([0]) }}"
+  register: uninstallResult
+  delegate_to: localhost
+
+- name: debug uninstall result
+  debug:
+    msg: "{{uninstallResult}}"
+
+- name: Install Packages
+  bigip_iapplx_package:
+    package: "{{ item.path }}"
+    state: present
+    provider:
+      server: "{{ provider.server }}"
+      server_port: "{{ provider.server_port}}"
+      transport: rest
+      user: "{{ provider.user }}"
+      password: "{{ provider.password }}"
+      validate_certs: no
+  loop: "{{ rpm_list.files|default([0]) }}"
+  register: installResult
+  delegate_to: localhost
+
+- name: debug install Result
+  debug:
+    msg: "{{installResult}}"
+
+# - name: wait for install
+#   uri: 
+#     url: "https://{{ provider.server }}{{ installUrl }}/{{installResult.results[0].json.id}}"
+#     method: GET
+#     headers:
+#       X-F5-Auth-Token: "{{ token.json.token.token }}"
+#     return_content: true
+#     validate_certs: false
+#     status_code: 200
+#   register: installStatus
+#   delegate_to: localhost
+#   # until: installStatus.json.status == 'FINISHED' or installStatus.json.errorMessage.find('already installed.')
+#   until: installStatus.json.status == 'FINISHED' or installStatus.json.status == 'FAILED'
+#   retries: 6
+#   delay: 60

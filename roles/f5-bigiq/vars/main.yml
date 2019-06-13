@@ -1,0 +1,6 @@
+---
+# vars file for f5-bigiq
+
+dest_file: "{{ inventory_dir }}/bigiq_inv.ini"
+authUrl: "/mgmt/shared/authn/login"
+ansible_date_time: "{{ansible_date_time}}"

@@ -1,0 +1,4 @@
+vault_password: admin
+ssh_vault_password: default
+vault_cert_vpn: "-----BEGIN CERTIFICATE-----\n-----END CERTIFICATE-----"
+vault_key_vpn: "-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY-----"

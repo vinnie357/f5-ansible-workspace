@@ -1,0 +1,16 @@
+- name: check for TS
+  uri: 
+    url: "https://{{ provider.server }}{{ tsUrl }}"
+    method: GET
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    status_code: 200
+  register: ts_check
+  until: ts_check is success
+  retries: 1
+  delay: 10
+  delegate_to: localhost
+  when: token.json.token.token != ""
+
