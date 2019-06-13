@@ -113,6 +113,8 @@ Setup
 
 populate your host_vars
 
+.. code::
+
     host_vars
         hostname
             vars.yml
@@ -120,15 +122,22 @@ populate your host_vars
 
 populate your group_vars
 
+.. code::
+
     group_vars
         groupname
 
 populate your inventory
+
+.. code::
+
     inventory
         [groupname]
             hostname
 
 encrypt your vault passwords
+
+.. code::
 
     ansible-vault encrypt vault.yml
 
@@ -139,6 +148,8 @@ encrypt your vault passwords
 |
 
 create your context
+
+.. code::
 
     context
         yourtask.yml
