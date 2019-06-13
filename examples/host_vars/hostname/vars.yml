@@ -3,9 +3,9 @@ provider:
   vmIP: '192.168.20.20/24'
   mgmtGW: 192.168.20.254
   user: admin
-  password: "{{ vault_password }}"
+  password: "{{ vault_web_pass }}"
   sshUser: root
-  sshPassword: "{{ ssh_vault_password }}"
+  sshPassword: "{{ vault_ssh_pass }}"
   validate_certs: no
   server_port: 443
   name: "hostname.domain.com"

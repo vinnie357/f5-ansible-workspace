@@ -2,10 +2,9 @@
   hosts: "{{context.target}}"
   gather_facts: false
   serial: 2
-
   vars:
     provider: "{{ hostvars[inventory_hostname]['provider'] }}"
-
+    vault: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/vault.yml"
   tasks:
   - include_role:
       name: f5-ve-vmware

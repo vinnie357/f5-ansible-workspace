@@ -102,6 +102,49 @@ copy modified OVA to your project ova/f5 directory
 
 |
 
+Setup
+-----
+
+.. note::
+
+    hostname is **not** the FQDN in the folderstructure
+
+|
+
+populate your host_vars
+
+    host_vars
+        hostname
+            vars.yml
+            vault.yml
+
+populate your group_vars
+
+    group_vars
+        groupname
+
+populate your inventory
+    inventory
+        [groupname]
+            hostname
+
+encrypt your vault passwords
+
+    ansible-vault encrypt vault.yml
+
+.. note::
+
+    more info here: 
+        https://gist.github.com/vinnie357/de4068450f83cadf281db0cfa0b014db
+|
+
+create your context
+
+    context
+        yourtask.yml
+
+|
+
 Deploy
 ------
 
@@ -111,8 +154,9 @@ run deploy with your provided context
 
 .. code::
 
-    ansible-playbook deploy.yaml --extra-vars "@context.vmware.json"
+    ansible-playbook deploy.yaml --extra-vars "@./context/bigip.yml" --ask-vault-pass
 
+    ansible-playbook deploy.yaml --extra-vars "@./context/bigip.yml" --vault-password-file ~/.vault_pass.txt
 |
 
 Exit Virtual enviroment
