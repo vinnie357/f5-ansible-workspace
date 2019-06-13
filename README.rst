@@ -45,34 +45,35 @@ running bash install.sh will do this for you
 
 |
 
-## script common failures:
-### If your Ubuntu machine doesn't get PIP
-```
-sudo apt-add-repository universe
-sudo apt-get update
-```
-https://stackoverflow.com/questions/49836676/error-after-upgrading-pip-cannot-import-name-main
+script common failures:
+    If your Ubuntu machine doesn't get PIP
+
+    .. code::
+
+        sudo apt-add-repository universe
+        sudo apt-get update
+
+    https://stackoverflow.com/questions/49836676/error-after-upgrading-pip-cannot-import-name-main
 
 
-### next
-## git ignore
-create a .gitignore in the root directory
-make sure to ignore the ansible directory
+git ignore:
+    create a .gitignore in the root directory
+    make sure to ignore the ansible directory
 
-.. code::
+    .. code::
 
-    touch .gitignore
-    echo "ansible" >> .gitignore
-    echo ".gitignore" >> .gitignore
-    echo "f5-appsvcs-extension" >> .gitignore
-    echo "f5-declarative-onboarding" >> .gitignore
-    echo "f5-telemetry-streaming" >> .gitignore
-    echo "rpms/*" >> .gitignore
-    echo "ova/*" >> .gitignore
-    echo "group_vars/*" >> .gitignore
-    echo "host_vars/*" >> .gitignore
+        touch .gitignore
+        echo "ansible" >> .gitignore
+        echo ".gitignore" >> .gitignore
+        echo "f5-appsvcs-extension" >> .gitignore
+        echo "f5-declarative-onboarding" >> .gitignore
+        echo "f5-telemetry-streaming" >> .gitignore
+        echo "rpms/*" >> .gitignore
+        echo "ova/*" >> .gitignore
+        echo "group_vars/*" >> .gitignore
+        echo "host_vars/*" >> .gitignore
 
-|
+    |
 
 **modify ovas for custom IPs**
     https://devcentral.f5.com/articles/ve-on-vmware-part-1-custom-properties-29787
