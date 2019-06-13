@@ -1603,6 +1603,55 @@
 			"name": "discovery and import",
 			"item": [
 				{
+					"name": "Get Auth TOKEN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "48c22ab2-33a1-4ec0-be66-372980ff3139",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//postman.clearGlobalVariable(\"token\");",
+									"",
+									"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+									"",
+									"postman.setEnvironmentVariable(\"BIGIQ_TOKEN\", jsonData.token.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\":\"{{BIGIQ_USER}}\",\r\n  \"password\":\"{{BIGIQ_PASS}}\"\r\n}"
+						},
+						"url": {
+							"raw": "https://{{BIGIQ}}/mgmt/shared/authn/login",
+							"protocol": "https",
+							"host": [
+								"{{BIGIQ}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"authn",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "bigiq add device",
 					"event": [
 						{
@@ -1610,7 +1659,13 @@
 							"script": {
 								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
 								"exec": [
-									""
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//postman.clearGlobalVariable(\"token\");",
+									"",
+									"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+									"",
+									"postman.setEnvironmentVariable(\"BIGIQ_IMPORT_TASK\", jsonData.id);"
 								],
 								"type": "text/javascript"
 							}
@@ -1634,7 +1689,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"address\": \"192.168.200.33\",\n    \"httpsPort\": 443,\n    \"userName\": \"admin\",\n    \"password\": \"benrocks\",\n    \"clusterName\": \"\",\n    \"useBigiqSync\": false,\n    \"deployWhenDscChangesPending\": false,\n    \"name\": \"trust_192.168.200.33\"\n}"
+							"raw": "{\r\n    \"operationalMode\": \"NEW_DEVICE\",\r\n    \"deviceDetails\": [{\r\n        \"newDevice\": {\r\n            \"address\": \"{{BIGIP6}}\",\r\n            \"httpsPort\": 443,\r\n            \"userName\": \"{{WEB_USER}}\",\r\n            \"password\": \"{{WEB_PASSWORD}}\"\r\n        },\r\n        \"moduleList\": [{\r\n            \"module\": \"adc_core\"\r\n        }]\r\n    }],\r\n    \"conflictPolicy\": \"USE_BIGIQ\",\r\n    \"deviceConflictPolicy\": \"USE_BIGIQ\",\r\n    \"snapshotWorkingConfig\": true,\r\n    \"name\": \"bigip-ltm-import-sa\",\r\n    \"description\": \"This task is to import a stand alone LTM\"\r\n}"
 						},
 						"url": {
 							"raw": "https://{{BIGIQ}}/mgmt/cm/global/tasks/device-discovery-import-controller/",
@@ -1712,7 +1767,7 @@
 					"response": []
 				},
 				{
-					"name": "bigiq discover ltm service",
+					"name": "bigiq rediscover LTM device status",
 					"event": [
 						{
 							"listen": "test",
@@ -1725,47 +1780,152 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{BIGIQ_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"192.168.200.33\",\n    \"httpsPort\": 443,\n    \"userName\": \"admin\",\n    \"password\": \"benrocks\",\n    \"clusterName\": \"\",\n    \"useBigiqSync\": false,\n    \"deployWhenDscChangesPending\": false,\n    \"name\": \"trust_192.168.200.33\"\n}"
+						},
+						"url": {
+							"raw": "https://{{BIGIQ}}/mgmt/cm/global/tasks/device-discovery-import-controller/{{DISCOVERY_TASK}}",
+							"protocol": "https",
+							"host": [
+								"{{BIGIQ}}"
+							],
+							"path": [
+								"mgmt",
+								"cm",
+								"global",
+								"tasks",
+								"device-discovery-import-controller",
+								"{{DISCOVERY_TASK}}"
 							]
+						},
+						"description": "list bigiq managed bigips filtering on hostname, managementAddress and uuid\n\nuuid is used to execute tasks against devices, like collectins ucs and executing scripts"
+					},
+					"response": []
+				},
+				{
+					"name": "bigiq re discover ltm",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//postman.clearGlobalVariable(\"token\");",
+									"",
+									"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+									"",
+									"postman.setEnvironmentVariable(\"BIGIQ_REDISCOVER_TASK\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{BIGIQ_TOKEN}}"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"moduleList\": [\n        {\n            \"module\": \"adc_core\"\n        }\n    ],\n    \"deviceReference\": {\n        \"link\": \"https://localhost/mgmt/cm/system/machineid-resolver/161aee58-4a49-4d49-9f6c-50ee4082617b\"\n    },\n    \"name\": \"discovery_192.168.200.33\"\n}"
+							"raw": "{\r\n    \"operationalMode\": \"EXISTING_DEVICE\",\r\n    \"deviceDetails\": [{\r\n        \"deviceReference\": {\r\n            \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices/ef196e58-8b8c-46eb-9e19-33892e84e67b\"\r\n        },\r\n        \"moduleList\": [{\r\n            \"module\": \"adc_core\"\r\n        }]\r\n    }],\r\n    \"conflictPolicy\": \"USE_BIGIQ\",\r\n    \"deviceConflictPolicy\": \"USE_BIGIQ\",\r\n    \"snapshotWorkingConfig\": true,\r\n    \"name\": \"bigip-ltm-re-import-sa\",\r\n    \"description\": \"This task is to re-import a stand alone LTM\"\r\n}"
 						},
 						"url": {
-							"raw": "https://{{bigiq}}/mgmt/cm/global/tasks/device-discovery/",
+							"raw": "https://{{BIGIQ}}/mgmt/cm/global/tasks/device-discovery-import-controller/",
 							"protocol": "https",
 							"host": [
-								"{{bigiq}}"
+								"{{BIGIQ}}"
+							],
+							"path": [
+								"mgmt",
+								"cm",
+								"global",
+								"tasks",
+								"device-discovery-import-controller",
+								""
+							]
+						},
+						"description": "list bigiq managed bigips filtering on hostname, managementAddress and uuid\n\nuuid is used to execute tasks against devices, like collectins ucs and executing scripts"
+					},
+					"response": []
+				},
+				{
+					"name": "bigiq discover ltm service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//postman.clearGlobalVariable(\"token\");",
+									"",
+									"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+									"",
+									"postman.setEnvironmentVariable(\"BIGIQ_DISCOVERY_TASK\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"moduleList\": [\n        {\n            \"module\": \"adc_core\"\n        }\n    ],\n    \"deviceReference\": {\n        \"link\": \"https://localhost/cm/system/machineid-resolver/ef196e58-8b8c-46eb-9e19-33892e84e67b\"\n    },\n    \"name\": \"discovery_{{BIGIP6}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{BIGIQ}}/mgmt/cm/global/tasks/device-discovery/",
+							"protocol": "https",
+							"host": [
+								"{{BIGIQ}}"
 							],
 							"path": [
 								"mgmt",
@@ -1799,34 +1959,18 @@
 					},
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1834,10 +1978,10 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{bigiq}}/mgmt/cm/global/tasks/device-discovery/1f94e4a4-5be6-4eb1-94b9-81c67f734ae5",
+							"raw": "https://{{BIGIQ}}/mgmt/cm/global/tasks/device-discovery/{{BIGIQ_DISCOVERY_TASK}}",
 							"protocol": "https",
 							"host": [
-								"{{bigiq}}"
+								"{{BIGIQ}}"
 							],
 							"path": [
 								"mgmt",
@@ -1845,7 +1989,7 @@
 								"global",
 								"tasks",
 								"device-discovery",
-								"1f94e4a4-5be6-4eb1-94b9-81c67f734ae5"
+								"{{BIGIQ_DISCOVERY_TASK}}"
 							]
 						},
 						"description": "list bigiq managed bigips filtering on hostname, managementAddress and uuid\n\nuuid is used to execute tasks against devices, like collectins ucs and executing scripts"
@@ -1860,7 +2004,13 @@
 							"script": {
 								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
 								"exec": [
-									""
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//postman.clearGlobalVariable(\"token\");",
+									"",
+									"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+									"",
+									"postman.setEnvironmentVariable(\"BIGIQ_IMPORT_TASK\", jsonData.id);"
 								],
 								"type": "text/javascript"
 							}
@@ -1868,45 +2018,29 @@
 					],
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"createChildTasks\": false,\n    \"skipDiscovery\": true,\n    \"deviceReference\": {\n        \"link\": \"https://localhost/mgmt/cm/system/machineid-resolver/161aee58-4a49-4d49-9f6c-50ee4082617b\"\n    },\n    \"snapshotWorkingConfig\": false,\n    \"useBigiqSync\": false,\n    \"name\": \"import-adc_core_192.168.200.33\"\n}"
+							"raw": "{\n    \"createChildTasks\": false,\n    \"skipDiscovery\": true,\n    \"deviceReference\": {\n        \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices/ef196e58-8b8c-46eb-9e19-33892e84e67b\"\n    },\n    \"snapshotWorkingConfig\": false,\n    \"useBigiqSync\": false,\n    \"name\": \"import-adc_core_{{BIGIP6}}\"\n}"
 						},
 						"url": {
-							"raw": "https://{{bigiq}}/mgmt/cm/adc-core/tasks/declare-mgmt-authority/",
+							"raw": "https://{{BIGIQ}}/mgmt/cm/adc-core/tasks/declare-mgmt-authority/",
 							"protocol": "https",
 							"host": [
-								"{{bigiq}}"
+								"{{BIGIQ}}"
 							],
 							"path": [
 								"mgmt",
@@ -1940,34 +2074,18 @@
 					},
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1975,10 +2093,10 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{bigiq}}/mgmt/cm/adc-core/tasks/declare-mgmt-authority/0d92d67f-66d5-411f-8fec-7148dc864ab5",
+							"raw": "https://{{BIGIQ}}/mgmt/cm/adc-core/tasks/declare-mgmt-authority/{{BIGIQ_IMPORT_TASK}}",
 							"protocol": "https",
 							"host": [
-								"{{bigiq}}"
+								"{{BIGIQ}}"
 							],
 							"path": [
 								"mgmt",
@@ -1986,7 +2104,63 @@
 								"adc-core",
 								"tasks",
 								"declare-mgmt-authority",
-								"0d92d67f-66d5-411f-8fec-7148dc864ab5"
+								"{{BIGIQ_IMPORT_TASK}}"
+							]
+						},
+						"description": "list bigiq managed bigips filtering on hostname, managementAddress and uuid\n\nuuid is used to execute tasks against devices, like collectins ucs and executing scripts"
+					},
+					"response": []
+				},
+				{
+					"name": "bigiq import ltm service Resolve Conflicts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{BIGIQ}}/mgmt/cm/adc-core/tasks/declare-mgmt-authority/{{BIGIQ_IMPORT_TASK}}",
+							"protocol": "https",
+							"host": [
+								"{{BIGIQ}}"
+							],
+							"path": [
+								"mgmt",
+								"cm",
+								"adc-core",
+								"tasks",
+								"declare-mgmt-authority",
+								"{{BIGIQ_IMPORT_TASK}}"
 							]
 						},
 						"description": "list bigiq managed bigips filtering on hostname, managementAddress and uuid\n\nuuid is used to execute tasks against devices, like collectins ucs and executing scripts"
@@ -2340,6 +2514,142 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "bigiq list managed devices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIQ}}/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices?$select=hostname,managementAddress,uuid",
+							"protocol": "https",
+							"host": [
+								"{{BIGIQ}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"resolver",
+								"device-groups",
+								"cm-bigip-allDevices",
+								"devices"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "hostname,managementAddress,uuid"
+								}
+							]
+						},
+						"description": "list bigiq managed bigips filtering on hostname, managementAddress and uuid\n\nuuid is used to execute tasks against devices, like collectins ucs and executing scripts"
+					},
+					"response": [
+						{
+							"name": "bigiq list managed devices",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "https://{{bigiq}}/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices?$select=hostname,managementAddress,uuid",
+									"protocol": "https",
+									"host": [
+										"{{bigiq}}"
+									],
+									"path": [
+										"mgmt",
+										"shared",
+										"resolver",
+										"device-groups",
+										"cm-bigip-allDevices",
+										"devices"
+									],
+									"query": [
+										{
+											"key": "$select",
+											"value": "hostname,managementAddress,uuid"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "webd"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 27 Mar 2019 17:08:17 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "567"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "must-revalidate"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"hostname\": \"bigip32.f5.com\",\n            \"managementAddress\": \"192.168.200.32\",\n            \"uuid\": \"056ede26-b9a8-4c1c-9850-c1241b8220ae\"\n        },\n        {\n            \"hostname\": \"bigiq01.f5.com\",\n            \"managementAddress\": \"192.168.200.30\",\n            \"uuid\": \"fe8e1dcb-5af4-405c-bbb5-0be3dd03307e\"\n        },\n        {\n            \"hostname\": \"bigip31.f5.com\",\n            \"managementAddress\": \"192.168.200.31\",\n            \"uuid\": \"18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n        }\n    ],\n    \"generation\": 2,\n    \"kind\": \"shared:resolver:device-groups:devicegroupdevicecollectionstate\",\n    \"lastUpdateMicros\": 1553202161878487,\n    \"selfLink\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices\"\n}"
+						}
+					]
 				}
 			],
 			"description": "device discovery and service imports",
@@ -5615,7 +5925,7 @@
 	],
 	"variable": [
 		{
-			"id": "a1f16e26-b0ab-4008-9246-a85b01a0becb",
+			"id": "6c5aadd6-43db-4674-8b97-9bacb5d4f28a",
 			"key": "DISCOVERY_TASK",
 			"value": "",
 			"type": "string"
