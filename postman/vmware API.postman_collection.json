@@ -16,10 +16,6 @@
 						"type": "text"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/rest/vcenter/datastore/",
 					"protocol": "https",
@@ -47,10 +43,6 @@
 						"value": "{{SID}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/rest/vcenter/datastore/?filter.names.1=synology_ssd",
 					"protocol": "https",
@@ -84,10 +76,6 @@
 						"value": "{{SID}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/rest/vcenter/vm",
 					"protocol": "https",
@@ -114,10 +102,6 @@
 						"value": "{{SID}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/api/vApp/",
 					"protocol": "https",
@@ -158,10 +142,6 @@
 						"value": "{{SID}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/rest/vcenter/vm?filter.names.1=bee-box1",
 					"protocol": "https",
@@ -194,10 +174,6 @@
 						"value": "{{SID}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}",
 					"protocol": "https",
@@ -225,10 +201,6 @@
 						"value": "{{SID}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/rest/vcenter/vm/{{VM}}/hardware/disk",
 					"protocol": "https",
@@ -497,22 +469,18 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "P@ssw0rd",
+							"value": "{{VCENTER_PASS}}",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "svc-ansible@vinlab.com",
+							"value": "{{VCENTER_USER}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{VCENTER}}/rest/com/vmware/cis/session",
 					"protocol": "https",

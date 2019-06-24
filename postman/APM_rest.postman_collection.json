@@ -361,10 +361,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/",
 					"protocol": "https",
@@ -394,10 +390,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/access-policy",
 					"protocol": "https",
@@ -426,10 +418,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/access-policy/~Japan_VPN~apm_test",
 					"protocol": "https",
@@ -459,10 +447,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/apm/policy/agent/ending-allow/~Japan_VPN~apm_test_end_allow_ag",
 					"protocol": "https",
@@ -493,10 +477,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/net/tunnels/tunnel/",
 					"protocol": "https",
@@ -526,10 +506,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/~Common~vpn_chrome_cp?ver=14.1.0",
 					"protocol": "https",
@@ -565,10 +541,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/net/tunnels/tunnel/~Common~not_vpn_chrome_cp",
 					"protocol": "https",
@@ -789,10 +761,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/tm/apm/profile/connectivity/~not_common~vpn_chrome_cp/client-policy/vpn_chrome_cp",
 					"protocol": "https",
@@ -875,19 +843,7 @@
 			],
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "default",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "root",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [
@@ -920,19 +876,7 @@
 			"name": "Create_Access_Profile",
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "metal357",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [
@@ -1004,7 +948,7 @@
 	],
 	"variable": [
 		{
-			"id": "250fa1f2-fe8d-4692-aedc-b4166bfa763f",
+			"id": "4d74f6df-c328-454c-8178-1544a7d9781e",
 			"key": "UDF_HOST",
 			"value": "78cf2e35-3123-4c1f-8825-6440e0d1295a.access.udf.f5.com",
 			"type": "string",

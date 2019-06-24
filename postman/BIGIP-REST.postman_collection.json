@@ -1,0 +1,878 @@
+{
+	"info": {
+		"_postman_id": "4e18db84-4ad1-0d85-e925-bc1d6c11ed3e",
+		"name": "BIGIP-REST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "virtuals and pools",
+			"item": [
+				{
+					"name": "List Pools all properties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/pool",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"pool"
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "List irules all properties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/rule",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"rule"
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "List irules filter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/rule?$select=name,selfLink,apiAnonymous",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"rule"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "name,selfLink,apiAnonymous"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "list Members all properties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/pool/~COFFEE~coffee~web_pool/members",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"pool",
+								"~COFFEE~coffee~web_pool",
+								"members"
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "list Members filter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/pool/~COFFEE~coffee~web_pool/members?$select=name,fullPath,address,selfLink,state",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"pool",
+								"~COFFEE~coffee~web_pool",
+								"members"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "name,fullPath,address,selfLink,state"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "List Pools filter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/pool?$select=name,fullPath,selfLink,membersReference&expandSubcollections=true",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"pool"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "name,fullPath,selfLink,membersReference"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "List Virtuals filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "481276cd-9876-4942-b32c-17163abf7b49",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/virtual?$select=name,destination,selfLink,pool,poolReference&expandSubcollections=true",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"virtual"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "name,destination,selfLink,pool,poolReference"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "List Virtuals filter get pool members",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "481276cd-9876-4942-b32c-17163abf7b49",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"var pools = [];\r",
+									"var poolList = [];\r",
+									"var virtualList = [];\r",
+									"var bigip = pm.variables.get(\"BIGIP4\");\r",
+									"var VirtualServers = [];\r",
+									"jsonData.items.forEach(item => {\r",
+									"    virtualName = {\r",
+									"        name: item.name,\r",
+									"        address: item.destination,\r",
+									"        pool: item.pool\r",
+									"    };\r",
+									"    // console.log(item.pool);\r",
+									"    poolLink = item.poolReference.link;\r",
+									"    //console.log(poolLink);\r",
+									"    newLink = poolLink.replace('localhost', bigip);\r",
+									"    // console.log(newLink);\r",
+									"    poolList.push(newLink);\r",
+									"    virtualList.push(virtualName);\r",
+									"    // poolsString = pools.join(\",\");\r",
+									"    // console.log(poolsString);\r",
+									"    \r",
+									"});\r",
+									"var virtuals = bigip + \"_virtuals\"\r",
+									"var pools = bigip + \"_pools\"\r",
+									"var members = bigip + \"_members\"\r",
+									"postman.setEnvironmentVariable(virtuals, virtualList);\r",
+									"postman.setEnvironmentVariable(pools, poolList);\r",
+									"// console.log(pools);\r",
+									"\r",
+									"\r",
+									"poolList.forEach(link =>{\r",
+									"    memberList = [];\r",
+									"    link1 = link + '&expandSubcollections=true&$select=name,fullPath,address,selfLink,state,membersReference'\r",
+									"    console.log(link1);\r",
+									"    request = {\r",
+									"        url: link1,\r",
+									"        method: 'GET',\r",
+									"        header: {\r",
+									"            'X-F5-Auth-Token': pm.variables.get(\"TOKEN\"),\r",
+									"            'Hostname': bigip\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, function (err, response) {\r",
+									"        //console.log(response.json());\r",
+									"        out = response.json();\r",
+									"        var memberData = out.membersReference.items;\r",
+									"        memberData.forEach(item => {\r",
+									"            console.log(item);\r",
+									"            memberList.push(item);\r",
+									"        });\r",
+									"        postman.setEnvironmentVariable(members, memberList);\r",
+									"    });\r",
+									"}\r",
+									")\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/virtual?$select=name,destination,selfLink,pool,poolReference,partition",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"virtual"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "name,destination,selfLink,pool,poolReference,partition"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "List Virtuals filter get pool members Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e8fb6d29-6bf8-4502-937e-2a4d43f9fa4a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://192.168.20.34/mgmt/tm/ltm/pool/~DEV~minecraft_app~minecraft_pool?ver=13.1.1.3&expandSubcollections=true&$select=membersReference,name,selfLink",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"20",
+								"34"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"pool",
+								"~DEV~minecraft_app~minecraft_pool"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "13.1.1.3"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								},
+								{
+									"key": "$select",
+									"value": "membersReference,name,selfLink"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "List Virtuals all properties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/ltm/virtual",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"virtual"
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "certs",
+			"item": [
+				{
+					"name": "get certs all properties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								""
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "get keys all properties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/sys/file/ssl-key",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"file",
+								"ssl-key"
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "get specifc cert",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/sys/file/ssl-cert/~Common~test_cert.crt?ver=13.1.1.3&expandSubcollections=true",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"file",
+								"ssl-cert",
+								"~Common~test_cert.crt"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "13.1.1.3"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "get specifc cert and key values",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c4025a21-d7a1-4c17-949b-f2a86ef44f4a",
+								"exec": [
+									"// set vars\r",
+									"items = [];\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"items.push(jsonData);\r",
+									"\r",
+									"\r",
+									"items.forEach(item => {\r",
+									"    // console.log(item.name);\r",
+									"    // var output = await new Cert(item);\r",
+									"    bigip = pm.variables.get(\"BIGIP4\");\r",
+									"    token = pm.variables.get(\"TOKEN\");\r",
+									"    certData = \"\";\r",
+									"    keyData = \"\";\r",
+									"    certRequest = {\r",
+									"        url: \"https://\" + bigip + \"/mgmt/tm/util/bash\",\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            'X-F5-Auth-Token': token,\r",
+									"            'Hostname': bigip,\r",
+									"            'Content-Type': 'Application/json'\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: JSON.stringify({\r",
+									"                \"command\": \"run\",\r",
+									"                \"utilCmdArgs\": \"-c \\\"cat /config/filestore/files_d/Common_d/certificate_d/\\:Common\\:test_cert.crt*\\\"\",\r",
+									"            })\r",
+									"        }\r",
+									"\r",
+									"    };\r",
+									"    keyRequest = {\r",
+									"        url: \"https://\" + bigip + \"/mgmt/tm/util/bash\",\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            'X-F5-Auth-Token': token,\r",
+									"            'Hostname': bigip,\r",
+									"            'Content-Type': 'Application/json'\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: JSON.stringify({\r",
+									"                \"command\": \"run\",\r",
+									"                \"utilCmdArgs\": \"-c \\\"cat /config/filestore/files_d/Common_d/certificate_key_d/\\:Common\\:test_cert.key*\\\"\",\r",
+									"            })\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(certRequest,function(err,response){\r",
+									"        if(err){\r",
+									"            console.log(\"certData\",err)\r",
+									"        }\r",
+									"        console.log(\"certdata\",response.json());\r",
+									"        certData = response.json();\r",
+									"        return response.json();\r",
+									"\r",
+									"    });\r",
+									"    pm.sendRequest(keyRequest,function(err,response){\r",
+									"        if(err){\r",
+									"            console.log(\"keyData\",err)\r",
+									"        }\r",
+									"        console.log(\"key data\",response.json());\r",
+									"        keyData = response.json();\r",
+									"        return response.json();\r",
+									"    });\r",
+									"    \r",
+									"    \r",
+									"    output = {\r",
+									"        name: item.name,\r",
+									"        key: item.name.replace('.crt', '.key'),\r",
+									"        certData: certData,\r",
+									"        keyData: keyData\r",
+									"    }\r",
+									"    \r",
+									"    console.log(\"output\",output);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/sys/file/ssl-cert/~Common~test_cert.crt?ver=13.1.1.3&expandSubcollections=true&$select=name,partition",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"file",
+								"ssl-cert",
+								"~Common~test_cert.crt"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "13.1.1.3"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								},
+								{
+									"key": "$select",
+									"value": "name,partition"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "get specifc cert Values",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/sys/file/ssl-cert/~Common~test_cert.crt?ver=13.1.1.3&expandSubcollections=true",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"file",
+								"ssl-cert",
+								"~Common~test_cert.crt"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "13.1.1.3"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "get specifc key",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/sys/file/ssl-key/~Common~test_cert.key?ver=13.1.1.3&expandSubcollections=true",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"file",
+								"ssl-key",
+								"~Common~test_cert.key"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "13.1.1.3"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "get specifc key Values",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "https://{{BIGIP4}}/mgmt/tm/sys/file/ssl-key/~Common~test_cert.key?ver=13.1.1.3&expandSubcollections=true",
+							"protocol": "https",
+							"host": [
+								"{{BIGIP4}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"file",
+								"ssl-key",
+								"~Common~test_cert.key"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "13.1.1.3"
+								},
+								{
+									"key": "expandSubcollections",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Big Ip Pool demo for REST"
+					},
+					"response": []
+				},
+				{
+					"name": "POST Bash command example",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"run\",\n\t\"utilCmdArgs\": \"-c \\\"date -u\\\"\",\n}"
+						},
+						"url": {
+							"raw": "https://{{HOST}}/mgmt/tm/util/bash",
+							"protocol": "https",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"util",
+								"bash"
+							]
+						},
+						"description": "get date from device"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48c22ab2-33a1-4ec0-be66-372980ff3139",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"postman.setEnvironmentVariable(\"TOKEN\", jsonData.token.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\":\"{{BIGIQ_USER}}\",\r\n  \"password\":\"{{BIGIQ_PASS}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{BIGIP4}}/mgmt/shared/authn/login",
+					"protocol": "https",
+					"host": [
+						"{{BIGIP4}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"authn",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

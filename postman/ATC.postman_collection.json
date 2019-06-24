@@ -20,10 +20,6 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "https://{{HOST}}/mgmt/shared/appsvcs/info",
 							"protocol": "https",
@@ -45,26 +41,10 @@
 					"name": "as3_install_check",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks/{{TASKID}}",
 							"protocol": "https",
@@ -103,10 +83,6 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks/",
 							"protocol": "https",
@@ -130,10 +106,6 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "https://{{HOST01}}/mgmt/shared/appsvcs/declare/US_VPN",
 							"protocol": "https",
@@ -268,10 +240,6 @@
 								"value": "{{TOKEN}}"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "https://{{HOST01}}/mgmt/shared/declarative-onboarding",
 							"protocol": "https",
@@ -299,10 +267,6 @@
 								"value": "{{TOKEN}}"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "https://{{HOST02}}/mgmt/shared/declarative-onboarding",
 							"protocol": "https",
@@ -335,10 +299,6 @@
 								"value": "{{TOKEN}}"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "https://192.168.20.16/mgmt/shared/telemetry/declare",
 							"protocol": "https",
@@ -372,10 +332,6 @@
 						"type": "text"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST01}}/mgmt/shared/iapp/package-management-tasks/{{TASKID}}",
 					"protocol": "https",
@@ -413,10 +369,6 @@
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST01}}/mgmt/shared/iapp/package-management-tasks/",
 					"protocol": "https",
@@ -597,10 +549,6 @@
 						"value": "{{TOKEN}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "https://{{HOST}}/mgmt/shared/iapp/package-management-tasks/",
 					"protocol": "https",
