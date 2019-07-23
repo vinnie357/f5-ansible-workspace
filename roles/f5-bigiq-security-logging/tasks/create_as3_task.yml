@@ -1,0 +1,24 @@
+  - name: Create AS3 logging post body
+    template:
+      src: "dcd_security_logging.j2"
+      dest: "{{filePath}}/{{ item.name }}_logging_virtual.json"  
+      mode: 'preserve'
+    delegate_to: localhost
+    loop: "{{ context.targets }}"
+
+  # - name: Create AS3 ASM post body
+  #   template:
+  #     src: "dcd_asm_logging_virtual.j2"
+  #     dest: "{{filePath}}/{{ item.name }}asm_logging_virtual.json"  
+  #     mode: 'preserve'
+  #   delegate_to: localhost
+  #   loop: "{{ context.targets }}"
+
+
+  # - name: Create AS3 AFM post body
+  #   template:
+  #     src: "dcd_afm_logging_virtual.j2"
+  #     dest: "{{filePath}}/{{ item.name }}afm_logging_virtual.json"  
+  #     mode: 'preserve'
+  #   delegate_to: localhost
+  #   loop: "{{ context.targets }}"

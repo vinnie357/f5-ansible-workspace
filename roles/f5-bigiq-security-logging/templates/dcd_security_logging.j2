@@ -1,0 +1,69 @@
+{
+    "$schema": "https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema.json",
+    "class":"AS3",
+    "action":"deploy",
+    "persist":true,
+    "declaration": { 
+        "class": "ADC",
+        "schemaVersion": "3.12.0",
+        "id": "init001",
+        "label": "DCD_AFM_LOG",
+        "remark": "DCD virtual for AFM request logging events",
+        "target": {
+            "address": "{{ item.host }}"
+        },
+        "BIGIQ": {
+            "class": "Tenant",
+            "SecurityASM": {
+                "class":"Application",
+                "template":"l4",
+                "serviceMain":{
+                    "class": "Service_L4",
+                    "virtualAddresses": [
+                        "{{item.virtualaddress}}"
+                    ],
+                    "virtualPort": 8514,
+                    "layer4": "tcp",
+                    "pool": "dcd_pool_asm"
+                },
+                "dcd_pool_asm": {
+                    "class":"Pool",
+                    "members": [
+                        {                            
+                            "addressDiscovery": "static",
+                            "servicePort": 8514,
+                            "serverAddresses": {{ dcd.virtuals }},
+                            "shareNodes": true
+                        }
+                    ]
+                    
+                }
+            },
+            "SecurityAFM": {
+                "class":"Application",
+                "template": "l4",
+                "serviceMain":{
+                    "class": "Service_L4",
+                    "virtualAddresses": [
+                        "{{item.virtualaddress}}"
+                    ],
+                    "virtualPort": 8018,
+                    "layer4": "tcp",
+                    "pool":"dcd_pool_afm"
+                },
+                "dcd_pool_afm": {
+                    "class":"Pool",
+                    "members": [
+                        {                            
+                            "addressDiscovery": "static",
+                            "servicePort": 8018,
+                            "serverAddresses": {{ dcd.virtuals }},
+                            "shareNodes": true
+                        }
+                    ]
+                    
+                }
+            }
+        }
+    }
+}
