@@ -1,0 +1,6 @@
+---
+# tasks file for f5-bigip-discovery
+
+- import_tasks: auth.yml
+- import_tasks: create_discovery_task.yml
+- import_tasks: discover_device.yml
