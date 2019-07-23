@@ -31,3 +31,6 @@
   - include_role:
       name: f5-bigip-discovery
     when: "context.tasks.discovery"
+  - include_role:
+      name: f5-bigiq-security-logging
+    when: "context.tasks.bigiq_security_logging"
