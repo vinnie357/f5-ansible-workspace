@@ -28,3 +28,6 @@
   - include_role:
       name: f5-bigiq-as3
     when: "context.tasks.bigiq_as3"
+  - include_role:
+      name: f5-bigip-discovery
+    when: "context.tasks.discovery"
