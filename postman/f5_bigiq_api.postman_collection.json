@@ -785,6 +785,252 @@
 					]
 				},
 				{
+					"name": "bigiq create app TEST asm",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{BIGIQ_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"example-declaration-01\",\r\n        \"label\": \"Task1\",\r\n        \"remark\": \"Task 1 - HTTP Application Service\",\r\n        \"target\": {\r\n            \"hostname\": \"autobigip3.vinlab.local\"\r\n        },\r\n        \"TEST\": {\r\n            \"class\": \"Tenant\",\r\n            \"coffee\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"http\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"192.168.1.28\"\r\n                    ],\r\n                    \"pool\": \"web_pool\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    },\r\n                    \"policyWAF\": {\r\n                        \"use\": \"appBaselineWAFPolicy\"\r\n                    },\r\n                    \"securityLogProfiles\": [\r\n                        {\r\n                            \"bigip\": \"/Common/Log all requests\"\r\n                        }\r\n                    ]\r\n                },\r\n                \"appBaselineWAFPolicy\": {\r\n                    \"class\": \"WAF_Policy\",\r\n                    \"url\": \"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml\"\r\n                },\r\n                \"web_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 32741,\r\n                            \"serverAddresses\": [\r\n                                \"192.168.2.91\",\r\n                                \"192.168.2.92\",\r\n                                \"192.168.2.93\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{BIGIQ}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{BIGIQ}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						},
+						"description": "executes a script on bigiq on the defined bigip"
+					},
+					"response": [
+						{
+							"name": "dev-bigip list executed scripts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "https://{{bigiq}}/mgmt/shared/user-script-execution",
+									"protocol": "https",
+									"host": [
+										"{{bigiq}}"
+									],
+									"path": [
+										"mgmt",
+										"shared",
+										"user-script-execution"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "webd"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 27 Mar 2019 18:06:20 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2949"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "must-revalidate"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"currentStep\": \"CLEAN_UP\",\n            \"deviceCount\": 1,\n            \"deviceReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                }\n            ],\n            \"endDateTime\": \"2019-03-27T13:04:30.925-0500\",\n            \"generation\": 7,\n            \"id\": \"cfaec593-8f62-46c2-b75c-1205228033a9\",\n            \"identityReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n                }\n            ],\n            \"kind\": \"shared:user-script-execution:userscripttaskstate\",\n            \"lastUpdateMicros\": 1553709870974967,\n            \"name\": \"asdf2\",\n            \"ownerMachineId\": \"fe8e1dcb-5af4-405c-bbb5-0be3dd03307e\",\n            \"scriptReference\": {\n                \"link\": \"https://localhost/mgmt/shared/user-scripts/04b5e68f-14a5-4988-bfed-792f4a1219d7\"\n            },\n            \"selfLink\": \"https://localhost/mgmt/shared/user-script-execution/cfaec593-8f62-46c2-b75c-1205228033a9\",\n            \"startDateTime\": \"2019-03-27T13:04:10.568-0500\",\n            \"status\": \"FINISHED\",\n            \"timeoutInSeconds\": 600,\n            \"userReference\": {\n                \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n            },\n            \"userScriptTaskStatuses\": [\n                {\n                    \"deviceReference\": {\n                        \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                    },\n                    \"status\": \"FINISHED\",\n                    \"message\": \"Finished executing script.\",\n                    \"hostname\": \"bigip31.f5.com\",\n                    \"machineId\": \"18cb7507-6fdf-4ed2-9c04-55518158b1aa\",\n                    \"address\": \"192.168.200.31\",\n                    \"httpsPort\": 443,\n                    \"startTime\": 507411695277825,\n                    \"output\": \"bigip31.f5.com\\n\",\n                    \"exitCode\": \"0\"\n                }\n            ],\n            \"username\": \"admin\"\n        },\n        {\n            \"currentStep\": \"CLEAN_UP\",\n            \"deviceCount\": 1,\n            \"deviceReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                }\n            ],\n            \"endDateTime\": \"2019-03-27T13:02:21.128-0500\",\n            \"generation\": 7,\n            \"id\": \"60d2b493-bf9b-4dc3-a631-906284743097\",\n            \"identityReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n                }\n            ],\n            \"kind\": \"shared:user-script-execution:userscripttaskstate\",\n            \"lastUpdateMicros\": 1553709741178626,\n            \"name\": \"asdf\",\n            \"ownerMachineId\": \"fe8e1dcb-5af4-405c-bbb5-0be3dd03307e\",\n            \"scriptReference\": {\n                \"link\": \"https://localhost/mgmt/shared/user-scripts/04b5e68f-14a5-4988-bfed-792f4a1219d7\"\n            },\n            \"selfLink\": \"https://localhost/mgmt/shared/user-script-execution/60d2b493-bf9b-4dc3-a631-906284743097\",\n            \"startDateTime\": \"2019-03-27T13:02:00.747-0500\",\n            \"status\": \"FINISHED\",\n            \"timeoutInSeconds\": 600,\n            \"userReference\": {\n                \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n            },\n            \"userScriptTaskStatuses\": [\n                {\n                    \"deviceReference\": {\n                        \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                    },\n                    \"status\": \"FINISHED\",\n                    \"message\": \"Finished executing script.\",\n                    \"hostname\": \"bigip31.f5.com\",\n                    \"machineId\": \"18cb7507-6fdf-4ed2-9c04-55518158b1aa\",\n                    \"address\": \"192.168.200.31\",\n                    \"httpsPort\": 443,\n                    \"startTime\": 507282260489506,\n                    \"output\": \"bigip31.f5.com\\n\",\n                    \"exitCode\": \"0\"\n                }\n            ],\n            \"username\": \"admin\"\n        }\n    ],\n    \"generation\": 15,\n    \"kind\": \"shared:user-script-execution:userscripttaskcollectionstate\",\n    \"lastUpdateMicros\": 1553709870977398,\n    \"selfLink\": \"https://localhost/mgmt/shared/user-script-execution\"\n}"
+						}
+					]
+				},
+				{
+					"name": "bigiq create logging profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"type": "text",
+								"value": "{{BIGIQ_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema.json\",\r\n    \"class\":\"AS3\",\r\n    \"action\":\"deploy\",\r\n    \"persist\":true,\r\n    \"declaration\": { \r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.5.0\",\r\n        \"id\": \"init001\",\r\n        \"label\": \"DCD_AFM_LOG\",\r\n        \"remark\": \"DCD virtual for AFM request logging events\",\r\n        \"target\": {\r\n            \"hostname\": \"autobigip3.vinlab.local\"\r\n        },\r\n        \"BIGIQ\": {\r\n            \"class\": \"Tenant\",\r\n            \"SecurityAFM\": {\r\n                \"class\":\"Application\",\r\n                \"template\":\"l4\",\r\n                \"serviceMain\":{\r\n                \t\"class\": \"Service_L4\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.100\"\r\n                    ],\r\n                    \"virtualPort\": 8018,\r\n                    \"layer4\": \"tcp\",\r\n                    \"pool\":\"dcd_pool_afm\"\r\n                },\r\n                \"dcd_pool_afm\": {\r\n                    \"class\":\"Pool\",\r\n                    \"members\": [\r\n                        {                            \r\n                            \"addressDiscovery\": \"static\",\r\n                            \"servicePort\": 8018,\r\n                            \"serverAddresses\": [\"10.1.10.13\"]\r\n                        }\r\n                    ]\r\n                    \r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{BIGIQ}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{BIGIQ}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						},
+						"description": "executes a script on bigiq on the defined bigip"
+					},
+					"response": [
+						{
+							"name": "dev-bigip list executed scripts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "https://{{bigiq}}/mgmt/shared/user-script-execution",
+									"protocol": "https",
+									"host": [
+										"{{bigiq}}"
+									],
+									"path": [
+										"mgmt",
+										"shared",
+										"user-script-execution"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "webd"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 27 Mar 2019 18:06:20 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2949"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "must-revalidate"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"currentStep\": \"CLEAN_UP\",\n            \"deviceCount\": 1,\n            \"deviceReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                }\n            ],\n            \"endDateTime\": \"2019-03-27T13:04:30.925-0500\",\n            \"generation\": 7,\n            \"id\": \"cfaec593-8f62-46c2-b75c-1205228033a9\",\n            \"identityReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n                }\n            ],\n            \"kind\": \"shared:user-script-execution:userscripttaskstate\",\n            \"lastUpdateMicros\": 1553709870974967,\n            \"name\": \"asdf2\",\n            \"ownerMachineId\": \"fe8e1dcb-5af4-405c-bbb5-0be3dd03307e\",\n            \"scriptReference\": {\n                \"link\": \"https://localhost/mgmt/shared/user-scripts/04b5e68f-14a5-4988-bfed-792f4a1219d7\"\n            },\n            \"selfLink\": \"https://localhost/mgmt/shared/user-script-execution/cfaec593-8f62-46c2-b75c-1205228033a9\",\n            \"startDateTime\": \"2019-03-27T13:04:10.568-0500\",\n            \"status\": \"FINISHED\",\n            \"timeoutInSeconds\": 600,\n            \"userReference\": {\n                \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n            },\n            \"userScriptTaskStatuses\": [\n                {\n                    \"deviceReference\": {\n                        \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                    },\n                    \"status\": \"FINISHED\",\n                    \"message\": \"Finished executing script.\",\n                    \"hostname\": \"bigip31.f5.com\",\n                    \"machineId\": \"18cb7507-6fdf-4ed2-9c04-55518158b1aa\",\n                    \"address\": \"192.168.200.31\",\n                    \"httpsPort\": 443,\n                    \"startTime\": 507411695277825,\n                    \"output\": \"bigip31.f5.com\\n\",\n                    \"exitCode\": \"0\"\n                }\n            ],\n            \"username\": \"admin\"\n        },\n        {\n            \"currentStep\": \"CLEAN_UP\",\n            \"deviceCount\": 1,\n            \"deviceReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                }\n            ],\n            \"endDateTime\": \"2019-03-27T13:02:21.128-0500\",\n            \"generation\": 7,\n            \"id\": \"60d2b493-bf9b-4dc3-a631-906284743097\",\n            \"identityReferences\": [\n                {\n                    \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n                }\n            ],\n            \"kind\": \"shared:user-script-execution:userscripttaskstate\",\n            \"lastUpdateMicros\": 1553709741178626,\n            \"name\": \"asdf\",\n            \"ownerMachineId\": \"fe8e1dcb-5af4-405c-bbb5-0be3dd03307e\",\n            \"scriptReference\": {\n                \"link\": \"https://localhost/mgmt/shared/user-scripts/04b5e68f-14a5-4988-bfed-792f4a1219d7\"\n            },\n            \"selfLink\": \"https://localhost/mgmt/shared/user-script-execution/60d2b493-bf9b-4dc3-a631-906284743097\",\n            \"startDateTime\": \"2019-03-27T13:02:00.747-0500\",\n            \"status\": \"FINISHED\",\n            \"timeoutInSeconds\": 600,\n            \"userReference\": {\n                \"link\": \"https://localhost/mgmt/shared/authz/users/admin\"\n            },\n            \"userScriptTaskStatuses\": [\n                {\n                    \"deviceReference\": {\n                        \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allBigIpDevices/devices/18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n                    },\n                    \"status\": \"FINISHED\",\n                    \"message\": \"Finished executing script.\",\n                    \"hostname\": \"bigip31.f5.com\",\n                    \"machineId\": \"18cb7507-6fdf-4ed2-9c04-55518158b1aa\",\n                    \"address\": \"192.168.200.31\",\n                    \"httpsPort\": 443,\n                    \"startTime\": 507282260489506,\n                    \"output\": \"bigip31.f5.com\\n\",\n                    \"exitCode\": \"0\"\n                }\n            ],\n            \"username\": \"admin\"\n        }\n    ],\n    \"generation\": 15,\n    \"kind\": \"shared:user-script-execution:userscripttaskcollectionstate\",\n    \"lastUpdateMicros\": 1553709870977398,\n    \"selfLink\": \"https://localhost/mgmt/shared/user-script-execution\"\n}"
+						}
+					]
+				},
+				{
 					"name": "bigiq create app PROD",
 					"event": [
 						{
@@ -2680,6 +2926,61 @@
 			"name": "license",
 			"item": [
 				{
+					"name": "refresh license pool",
+					"item": [
+						{
+							"name": "refresh",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "3d944a7a-3e95-4165-9cdc-b976a966bebc",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-F5-Auth-Token",
+										"value": "{{BIGIQ_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"username\":\"{{WEB_USER}}\",\"password\":\"{{WEB_PASSWORD}}\",\"state\":\"INSTALL\"}"
+								},
+								"url": {
+									"raw": "https://{{BIGIQ}}/mgmt/cm/device/licensing/pool/purchased-pool/licenses/50b474a4-7e45-4996-bcad-8f4c9282bb8c/members/81e2a450-6649-4cd0-8503-2d3d41f86b19",
+									"protocol": "https",
+									"host": [
+										"{{BIGIQ}}"
+									],
+									"path": [
+										"mgmt",
+										"cm",
+										"device",
+										"licensing",
+										"pool",
+										"purchased-pool",
+										"licenses",
+										"50b474a4-7e45-4996-bcad-8f4c9282bb8c",
+										"members",
+										"81e2a450-6649-4cd0-8503-2d3d41f86b19"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
 					"name": "bigiq list license pools",
 					"event": [
 						{
@@ -2698,34 +2999,18 @@
 					},
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -2776,34 +3061,18 @@
 					},
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -2849,34 +3118,18 @@
 					},
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -2931,34 +3184,18 @@
 					},
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -3006,34 +3243,18 @@
 					],
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -3159,34 +3380,18 @@
 					],
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "PATCH",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -3312,34 +3517,18 @@
 					],
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "{{latest_passwd}}",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{BIGIQ_TOKEN}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -5716,6 +5905,158 @@
 			]
 		},
 		{
+			"name": "logging",
+			"item": [
+				{
+					"name": "Pinning",
+					"item": [],
+					"description": "Pinning shared profiles to devices",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "profiles",
+					"item": [
+						{
+							"name": "create shared security logging profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e2285c3d-357c-428f-818b-22190e9311fa",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"//postman.clearGlobalVariable(\"token\");",
+											"",
+											"//postman.setGlobalVariable(\"token\", \"jsonData.state.token\");",
+											"",
+											"postman.setEnvironmentVariable(\"TASKID\", jsonData.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "X-F5-Auth-Token",
+										"type": "text",
+										"value": "{{BIGIQ_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"partition\":\"Common\",\"name\":\"ASM_all_requests\",\"description\":\"\",\"applicationReference\":{\"items\":[{\"facility\":\"local0\",\"format\":{\"fieldDelimiter\":\",\",\"type\":\"predefined\"},\"guaranteeLogging\":\"disabled\",\"guaranteeResponseLogging\":\"disabled\",\"localStorage\":\"enabled\",\"logicOperation\":\"or\",\"maximumEntryLength\":\"2k\",\"maximumHeaderSize\":\"any\",\"maximumQuerySize\":\"any\",\"maximumRequestSize\":\"any\",\"protocol\":\"tcp\",\"remoteStorage\":\"bigiq\",\"reportAnomalies\":\"disabled\",\"responseLogging\":\"none\",\"filter\":[{\"name\":\"request-type\",\"values\":[\"all\"]},{\"name\":\"search-all\",\"values\":[]}],\"servers\":[{\"name\":\"10.1.10.100:8514\"}]}]},\"ipIntelligence\":{\"aggregateRate\":4294967295,\"logPublisher\":null,\"logRtbh\":\"disabled\",\"logScrubber\":\"disabled\",\"logShun\":\"disabled\",\"logTranslationFields\":\"disabled\"},\"isPublishedForTemplates\":true,\"nat\":{\"endInboundSession\":\"disabled\",\"endOutboundSession\":{\"action\":\"disabled\"},\"errors\":\"disabled\",\"lsnLegacyMode\":\"disabled\",\"logSubscriberId\":\"disabled\",\"quotaExceeded\":\"disabled\",\"startInboundSession\":\"disabled\",\"startOutboundSession\":{\"action\":\"disabled\"}},\"networkReference\":{\"items\":[{\"filter\":{\"logAclMatchAccept\":\"disabled\",\"logAclMatchDrop\":\"disabled\",\"logAclMatchReject\":\"disabled\",\"logAclToBoxDeny\":\"disabled\",\"logGeoAlways\":\"disabled\",\"logUserAlways\":\"disabled\",\"logIpErrors\":\"disabled\",\"logTcpErrors\":\"disabled\",\"logTcpEvents\":\"disabled\",\"logTranslationFields\":\"disabled\",\"logUuidField\":\"disabled\"},\"format\":{\"fieldListDelimiter\":\",\",\"type\":\"none\"},\"logPublisher\":null,\"rateLimits\":{\"aclMatchAccept\":\"indefinite\",\"aclMatchDrop\":\"indefinite\",\"aclMatchReject\":\"indefinite\",\"aggregateRate\":\"indefinite\",\"ipErrors\":\"indefinite\",\"tcpErrors\":\"indefinite\",\"tcpEvents\":\"indefinite\"},\"rateLimit\":{\"aclMatchAccept\":4294967295,\"aclMatchDrop\":4294967295,\"aclMatchReject\":4294967295,\"aggregateRate\":4294967295,\"ipErrors\":4294967295,\"tcpErrors\":4294967295,\"tcpEvents\":4294967295}}]},\"portMisuse\":{\"aggregateRate\":4294967295,\"logPublisher\":null},\"protocolDnsReference\":{\"items\":[{\"filter\":{\"logDnsDrop\":\"disabled\",\"logDnsFilteredDrop\":\"disabled\",\"logDnsMalformed\":\"disabled\",\"logDnsMalicious\":\"disabled\",\"logDnsReject\":\"disabled\"},\"format\":{\"fieldListDelimiter\":\",\",\"type\":\"none\"},\"logPublisher\":null}]},\"protocolSipReference\":{\"items\":[{\"filter\":{\"logSipDrop\":\"disabled\",\"logDnsGlobalFailures\":\"disabled\",\"logSipMalformed\":\"disabled\",\"logSipRedirectionResponses\":\"disabled\",\"logSipRequestFailures\":\"disabled\",\"logSipServerErrors\":\"disabled\"},\"format\":{\"fieldListDelimiter\":\",\",\"type\":\"none\"},\"logPublisher\":null}]},\"protocolInspection\":{\"logPacket\":\"disabled\"},\"trafficStatistics\":{\"activeFlows\":\"disabled\",\"missedFlows\":\"disabled\",\"reapedFlows\":\"disabled\",\"syncookies\":\"disabled\",\"syncookiesWhitelist\":\"disabled\",\"logPublisher\":null}}"
+								},
+								"url": {
+									"raw": "https://{{BIGIQ}}/mgmt/cm/security-shared/working-config/log-profiles",
+									"protocol": "https",
+									"host": [
+										"{{BIGIQ}}"
+									],
+									"path": [
+										"mgmt",
+										"cm",
+										"security-shared",
+										"working-config",
+										"log-profiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "modify shared security logging profile add ASM",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "X-F5-Auth-Token",
+										"type": "text",
+										"value": "{{BIGIQ_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"facility\":\"local0\",\"guaranteeLogging\":\"disabled\",\"guaranteeResponseLogging\":\"disabled\",\"localStorage\":\"disabled\",\"logicOperation\":\"or\",\"maximumEntryLength\":\"2k\",\"maximumHeaderSize\":\"any\",\"maximumQuerySize\":\"any\",\"maximumRequestSize\":\"any\",\"protocol\":\"tcp\",\"remoteStorage\":\"bigiq\",\"reportAnomalies\":\"disabled\",\"responseLogging\":\"none\",\"filter\":[{\"name\":\"request-type\",\"values\":[\"all\"]},{\"name\":\"search-all\",\"values\":[]}],\"format\":{\"type\":\"predefined\",\"fieldDelimiter\":\",\"},\"servers\":[{\"name\":\"10.1.10.100:8514\"}],\"partition\":\"Common\",\"name\":\"ASM_all_requests\",\"id\":\"{{TASKID}}\",\"generation\":1,\"lastUpdateMicros\":1563986490342471,\"kind\":\"cm:security-shared:working-config:log-profiles:application:profileapplicationstate\",\"selfLink\":\"https://localhost/mgmt/cm/security-shared/working-config/log-profiles/{{TASKID}}/application/{{TASKID}}\"}"
+								},
+								"url": {
+									"raw": "https://{{BIGIQ}}/mgmt/cm/security-shared/working-config/log-profiles/{{TASKID}}/application",
+									"protocol": "https",
+									"host": [
+										"{{BIGIQ}}"
+									],
+									"path": [
+										"mgmt",
+										"cm",
+										"security-shared",
+										"working-config",
+										"log-profiles",
+										"{{TASKID}}",
+										"application"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create shared security logging profile add ASM",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "X-F5-Auth-Token",
+										"type": "text",
+										"value": "{{BIGIQ_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"facility\":\"local0\",\"guaranteeLogging\":\"disabled\",\"guaranteeResponseLogging\":\"disabled\",\"localStorage\":\"disabled\",\"logicOperation\":\"or\",\"maximumEntryLength\":\"2k\",\"maximumHeaderSize\":\"any\",\"maximumQuerySize\":\"any\",\"maximumRequestSize\":\"any\",\"protocol\":\"tcp\",\"remoteStorage\":\"bigiq\",\"reportAnomalies\":\"disabled\",\"responseLogging\":\"none\",\"filter\":[{\"name\":\"request-type\",\"values\":[\"all\"]},{\"name\":\"search-all\",\"values\":[]}],\"format\":{\"type\":\"predefined\",\"fieldDelimiter\":\",\"},\"servers\":[{\"name\":\"10.1.10.100:8514\"}],\"partition\":\"Common\",\"name\":\"ASM_all_requests\",\"id\":\"{{TASKID}}\",\"generation\":1,\"lastUpdateMicros\":1563986490342471,\"kind\":\"cm:security-shared:working-config:log-profiles:application:profileapplicationstate\",\"selfLink\":\"https://localhost/mgmt/cm/security-shared/working-config/log-profiles/{{TASKID}}/application/{{TASKID}}\"}"
+								},
+								"url": {
+									"raw": "https://{{BIGIQ}}/mgmt/cm/security-shared/working-config/log-profiles/{{TASKID}}/application",
+									"protocol": "https",
+									"host": [
+										"{{BIGIQ}}"
+									],
+									"path": [
+										"mgmt",
+										"cm",
+										"security-shared",
+										"working-config",
+										"log-profiles",
+										"{{TASKID}}",
+										"application"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "creating shared security profiles",
+					"_postman_isSubFolder": true
+				}
+			],
+			"description": "security logging profiles"
+		},
+		{
 			"name": "bigiq list managed devices",
 			"event": [
 				{
@@ -5925,7 +6266,7 @@
 	],
 	"variable": [
 		{
-			"id": "2ec6f1a8-bfec-456d-bb3e-3d4d645ddcc8",
+			"id": "2e5453dc-8d7f-4a47-94c5-cb9c12bcfb85",
 			"key": "DISCOVERY_TASK",
 			"value": "",
 			"type": "string"
