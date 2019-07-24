@@ -1,0 +1,9 @@
+---
+# vars file for f5-bigip-discovery
+
+filePath: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+
+authUrl: "/mgmt/shared/authn/login"
+provider.server: "{{ovaResult.instance.ipv4}}"
+as3CheckUrl: "/mgmt/shared/appsvcs/info"
+discoveryUrl: "/mgmt/cm/global/tasks/device-discovery-import-controller/"

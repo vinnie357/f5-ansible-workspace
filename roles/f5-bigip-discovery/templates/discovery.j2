@@ -1,0 +1,19 @@
+{
+    "operationalMode": "NEW_DEVICE",
+    "deviceDetails": [{
+        "newDevice": {
+            "address": "{{ item.host }}",
+            "httpsPort": 443,
+            "userName": "{{ item.user }}",
+            "password": "{{ item.pass }}"
+        },
+        "moduleList": [{
+            "module": "adc_core"
+        }]
+    }],
+    "conflictPolicy": "USE_BIGIQ",
+    "deviceConflictPolicy": "USE_BIGIQ",
+    "snapshotWorkingConfig": true,
+    "name": "bigip-ltm-import-sa",
+    "description": "This task is to import a stand alone LTM"
+}

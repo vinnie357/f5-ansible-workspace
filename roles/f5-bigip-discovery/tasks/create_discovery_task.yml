@@ -1,0 +1,7 @@
+  - name: Create discovery post body
+    template:
+      src: "discovery.j2"
+      dest: "{{filePath}}/{{ item.name }}_discovery.json"  
+      mode: 'preserve'
+    delegate_to: localhost
+    loop: "{{ context.targets }}"

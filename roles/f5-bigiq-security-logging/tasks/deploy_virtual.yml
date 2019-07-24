@@ -1,0 +1,25 @@
+
+- name: logging virtuals
+  find:
+    paths: "{{ filePath }}"
+    patterns: "*_logging_virtual.json"
+  register: virtual_list
+  delegate_to: localhost
+
+# - debug:
+#     msg: "{{ app_list }}"
+
+- name: POST AS3
+  uri:
+    url: "https://{{ bigiq.host }}{{ as3Url }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 200, 207
+  register: virtualResult
+  loop: "{{ virtual_list.files }}"
+  delegate_to: localhost

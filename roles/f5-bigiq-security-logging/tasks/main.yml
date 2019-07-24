@@ -1,0 +1,7 @@
+---
+# tasks file for f5-bigiq-security-logging
+
+
+- import_tasks: auth.yml
+- import_tasks: create_as3_task.yml
+- import_tasks: deploy_virtual.yml

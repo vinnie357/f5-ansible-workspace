@@ -1,0 +1,22 @@
+
+- name: devices
+  find:
+    paths: "{{ filePath }}"
+    patterns: "*_discovery.json"
+  register: device_list
+  delegate_to: localhost
+
+- name: Discover Device 
+  uri:
+    url: "https://{{ provider.server }}{{ discoveryUrl }}"
+    method: POST
+    headers:
+      X-F5-Auth-Token: "{{ token.json.token.token }}"
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file', item.path, errors='strict' ) }}"
+    status_code: 200, 202
+  register: discoveryResult
+  loop: "{{ device_list.files }}"
+  delegate_to: localhost
